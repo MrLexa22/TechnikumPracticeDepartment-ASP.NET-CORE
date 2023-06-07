@@ -1,0 +1,28 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsPracticeChartPages
+@model AddEditPracticeChart
+<div>
+    <div class="search-results">
+        <div class="checkboxes_element">
+            @if (Model.IsEndedPractice == true)
+            {
+                @for (int i = 0; i < Model.list_groups.Count(); i++)
+                {
+                    <div style="display:none;">
+                        <input type="text" asp-for="@Model.list_groups[i].ID_Group">
+                    </div>
+                    <input asp-for="@Model.list_groups[i].Selected" class="child" id="selectGroup_@i">
+                    <label class="child_el search__element_orgped" for="selectGroup_@i">@Model.list_groups[i].NameGroup [@Model.list_groups[i].SpecName] (@Model.list_groups[i].Course.ToString() курс)</label>
+                    <div></div>
+                }
+            }
+            else
+            {
+                @foreach (var a in Model.list_groups.Where(p => p.Selected == true))
+                {
+                    <label class="child_el search__element_orgped" for="selectGroup_@a.ID_Group">@a.NameGroup [@a.SpecName] (@a.Course.ToString() курс)</label>
+                    <div></div>
+                }
+            }
+        </div>
+    </div>
+</div>

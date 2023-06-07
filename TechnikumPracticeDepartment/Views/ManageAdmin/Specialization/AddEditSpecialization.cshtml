@@ -1,0 +1,156 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsSpecializationPages
+@model AddEditSpecializationModel
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3"> 
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_Specialization != 0)
+                {
+                    <p class="employees_title">@Model.SpecializationCode. @Model.SpecializationName</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление специальности</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="Specialization" asp-action="AddEditSpecializationPost" asp-route-id="@Model.ID_Specialization" method="post" class="callback-from">
+                <div style="display:none;">
+                    <input type="text" asp-for="ID_Specialization" />
+                </div>
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Код специальности</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.SpecializationCode</p>
+                                <div class="inputs_CodeBlock inputs_values" @if(Model.ID_Specialization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="SpecializationCode" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Код специальности"></input>
+                                    </div>
+                                    <span asp-validation-for="SpecializationCode" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Наименование специальности</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>} id="old_CodeName">@Model.SpecializationName</p>
+                                <div class="inputs_CodeName inputs_values" @if(Model.ID_Specialization != 0){<text>style="display: none;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="SpecializationName" type="text" class="search-field" id="input_CodeName" style="width: 100%;" placeholder="Наименование специальности"></input>
+                                    </div>
+                                    <span asp-validation-for="SpecializationName" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeName" onclick="edit('CodeName', true);" href="#"><img id="img_edit_CodeName" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeName" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Квалификация</p>
+                        <div>
+                            <div style="max-width: 350px;">
+                                <p @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>} id="old_QualificatName">@Model.SpecizalizationQualif</p>
+                                <div class="inputs_QualificatName inputs_values" @if(Model.ID_Specialization != 0){<text>style="display: none;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="SpecizalizationQualif" type="text" class="search-field" id="input_QualificatName" style="width: 100%;" placeholder="Наименование квалификации"></input>
+                                    </div>
+                                    <span asp-validation-for="SpecizalizationQualif" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Specialization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_QualificatName" onclick="edit('QualificatName', true);" href="#"><img id="img_edit_QualificatName" src="~/images/edit.svg"><img style="display: none;" id="img_cross_QualificatName" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; margin-top: 10px;">
+                    <input type="submit" class="btn btn_save submit_btn" style="cursor: pointer;" href="#" value="Сохранить" />
+                </div>
+            </form>
+            @if (Model.ID_Specialization != 0)
+            {
+                <form asp-controller="Specialization" asp-action="EditGroupsSpecialization" asp-route-id="@Model.ID_Specialization" method="post" class="callback-from">
+                    <hr class="hr_style" size="1px" noshade>
+                    <div class="block_info">
+                        <p class="block_title">Прикреплённые группы</p>
+                        <table class="table_roles" style="height: fit-content;">
+                            <tr>
+                                <th>
+                                    <p>Группы</p>
+                                </th>
+                                <th>
+                                    <div>
+                                        <div class="search" style="margin-bottom: 0px; width:80%;">
+                                            <input type="text" onkeyup="search_group()" id="search-field_orgped" class="search-field" style="width: 100%;" placeholder="Введите наименование группы">
+                                            <img src="~/images/search.svg" alt="" class="search-icon">
+                                        </div>
+                                        <div class="search-results">
+                                            <div class="checkboxes_element">
+                                                @for (int i = 0; i < Model.list_groups.Count(); i++)
+                                                {
+                                                    <div style="display:none;">
+                                                        <input type="text" asp-for="@Model.list_groups[i].ID_Group">
+                                                        <input type="text" asp-for="@Model.list_groups[i].SpecID">
+                                                    </div>
+                                                    <input type="checkbox" asp-for="@Model.list_groups[i].Selected" class="custom-checkbox child" id="group_@Model.list_groups[i].ID_Group">
+                                                    <label class="child_el search__element_orgped" for="group_@Model.list_groups[i].ID_Group">@Model.list_groups[i].NameGroup <p style="font-style:italic; margin-left:25px;">@Model.list_groups[i].SpecName</p></label>
+                                                    <div></div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <p style="font-style:italic; width: 70%;">При снятии галочки с группы данная группа будет перемещена в другую специальность (первую в списке специальностей, кроме текущей). Если специальность одна, то группа не будет откреплена</p>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                        <div style="display: flex; margin-top: 10px;">
+                            <input type="submit" class="btn btn_save submit_btn btn_noValidation" style="cursor: pointer;" href="#" value="Сохранить" />
+                        </div>
+                    </div>
+                </form>
+            }
+            <div>
+                <hr class="hr_style" size="1px" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Specialization">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=3');
+    $(".btn_noValidation").click(function () {
+        AmagiLoader.show();
+    });
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.2"></script>
+
+

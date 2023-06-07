@@ -1,0 +1,139 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsManageResponses
+@model IndexManageResponses
+@addTagHelper *, TechnikumPracticeDepartment
+<style>
+    .vacancy_item {
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 12px #edeff0;
+        justify-content: normal;
+        border: 1px solid transparent;
+        position: relative;
+        margin-bottom: 16px;
+        display: flex;
+        transition: height 1s ease-in,padding-bottom .1s,padding-top .1s;
+    }
+
+    .description_vacancy {
+        position: relative;
+        width: 100%;
+    }
+
+    .title_vacancy {
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+        line-height: 1.1;
+        font-weight: 700;
+    }
+
+    .tag {
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+</style>
+<div>
+    <div class="table_container" style="position: relative;">
+        <div style="margin-bottom: 80px;">
+            @if (Model.list_Responses.Count() > 0)
+            {
+                <h3 style="margin-bottom: 10px;">Отклики на вакансии/резюме:</h3>
+            }
+            @foreach (var a in Model.list_Responses)
+            {
+                <div class="vacancy_item">
+                    <div class="description_vacancy">
+                        <div style="width: fit-content;"><a asp-action="InfoResponse" asp-controller="ManageResponses" asp-route-typeResponse="@if(a.ResponseFromOrganization == null){<text>1</text>}else{<text>2</text>}" asp-route-id="@if(a.ResponseFromOrganization == null){<text>@a.ResponseFromStudent.IdResponse</text>}else{<text>@a.ResponseFromOrganization.IdResponse</text>}" style="width: fit-content; color: blue;"><h3 class="title_vacancy">Отклик от @if (a.ResponseFromOrganization == null) { <text>@a.ResponseFromStudent.DateTimeCreate.ToShortDateString() @a.ResponseFromStudent.DateTimeCreate.ToShortTimeString()</text> }else{<text>@a.ResponseFromOrganization.DateTimeCreate.ToShortDateString() @a.ResponseFromOrganization.DateTimeCreate.ToShortTimeString()</text>}</h3></a></div>
+                        <p style="margin-top: 8px; color:cornflowerblue;"><b>@if (a.ResponseFromOrganization == null) {<text>Отклик студента (резюме <a target="_blank" style="color: blue;" asp-action="ResumeStudent" asp-controller="Students" asp-route-id="@a.ResponseFromStudent.StudentId">"@a.ResponseFromStudent.Student.Resume.DesiredPosition"</a>) на вакансию <a asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@a.ResponseFromStudent.VacancyId" target="_blank" style="color: blue;">"@a.ResponseFromStudent.Vacancy.NameVacancy"</a></text> } else{<text>Отклик организации (вакансия <a asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@a.ResponseFromOrganization.VacancyId" target="_blank" style="color: blue;">"@a.ResponseFromOrganization.Vacancy.NameVacancy"</a>) на резюме студента <a target="_blank" style="color: blue;" asp-action="ResumeStudent" asp-controller="Students" asp-route-id="@a.ResponseFromOrganization.Resume.StudentId">"@a.ResponseFromOrganization.Resume.DesiredPosition"</a></text> }</b></p>
+                        <p>Студент: @if (a.ResponseFromOrganization == null) {<text>@a.ResponseFromStudent.Student.User.SurnameUser @a.ResponseFromStudent.Student.User.NameUser @a.ResponseFromStudent.Student.User.PatronymicNameUser?.ToString()</text> }else{<text>@a.ResponseFromOrganization.Resume.Student.User.SurnameUser @a.ResponseFromOrganization.Resume.Student.User.NameUser @a.ResponseFromOrganization.Resume.Student.User.PatronymicNameUser?.ToString()</text> }</p>
+                        <p style="margin-top: 8px;">Специальность: @if (a.ResponseFromOrganization == null) { <text>[@a.ResponseFromStudent.Student.Group.Specialization.SpecializationCode] @a.ResponseFromStudent.Student.Group.Specialization.SpecializationName</text> }else{<text>[@a.ResponseFromOrganization.Resume.Student.Group.Specialization.SpecializationCode] @a.ResponseFromOrganization.Resume.Student.Group.Specialization.SpecializationName</text> }</p>
+                        <p style="margin-top: 8px;">Квалификация: @if (a.ResponseFromOrganization == null) { <text>@a.ResponseFromStudent.Student.Group.Specialization.NameQualification</text> }else{ <text>@a.ResponseFromOrganization.Resume.Student.Group.Specialization.NameQualification</text> }</p>
+                        <p style="margin-top: 8px;">Группа: @if (a.ResponseFromOrganization == null) { <text>@a.ResponseFromStudent.Student.Group.NameGroup</text> }else{ <text>@a.ResponseFromOrganization.Resume.Student.Group.NameGroup</text> }</p>
+                        <p style="margin-top: 8px;">
+                            Статус: 
+                            @if(a.ResponseFromOrganization == null)
+                            {
+                                @(a.ResponseFromStudent.Status == 0 ? "создан" : (a.ResponseFromStudent.Status == 1 ? "на рассмотрении (ожидание ответа студента)" : (a.ResponseFromStudent.Status == 2 ? "на рассмотрении (получен ответ студента, ожидание ответа организации)" : (a.ResponseFromStudent.Status == 3 ? "принят (на рассмотрении отдела производственного обучения)" : (a.ResponseFromStudent.Status == 4 ? "принят" : (a.ResponseFromStudent.Status == 5 ? "отказ организации" : "отказ отдела производственного обучения"))))))
+                            }
+                            else
+                            {
+                                @(a.ResponseFromOrganization.Status == 0 ? "создан" : (a.ResponseFromOrganization.Status == 1 ? "на рассмотрении (ожидание ответа студента)" : (a.ResponseFromOrganization.Status == 2 ? "на рассмотрении (получен ответ студента, ожидание ответа организации)" : (a.ResponseFromOrganization.Status == 3 ? "принят (на рассмотрении отдела производственного обучения)" : (a.ResponseFromOrganization.Status == 4 ? "принят" : (a.ResponseFromOrganization.Status == 5 ? "отказ организации" : "отказ отдела производственного обучения"))))))
+                            }
+                        </p>
+                        @*<div onclick="infoStudent(@a.StudentId, 1, @a.VacancyId);" style="margin-top: 8px; width: fit-content; cursor: pointer; color: blue;">Подробнее</div>*@
+                    </div>
+                </div>
+            }
+            @if (Model.list_Requests.Count() > 0)
+            {
+                @if (Model.list_Requests.Count() > 0)
+                {
+                    <hr class="hr_style" size="1px" noshade>
+                }
+                <h3 style="margin-top: 10px; margin-bottom: 10px;">Запросы на распределение в организацию (по договору):</h3>
+            }
+            @foreach (var a in Model.list_Requests)
+            {
+                <div class="vacancy_item">
+                    <div class="description_vacancy">
+                        <div style="width: fit-content;"><a style="width: fit-content; color: blue;" asp-action="InfoRequest" asp-route-id="@a.IdRequest"><h3 class="title_vacancy">Запрос на распределение в организацию от @a.Student.User.SurnameUser @a.Student.User.NameUser @a.Student.User.PatronymicNameUser?.ToString() [@a.Student.Group.NameGroup]</h3></a></div>
+                        <p style="margin-top: 8px;">Специальность: [@a.Student.Group.Specialization.SpecializationCode] @a.Student.Group.Specialization.SpecializationName</p>
+                        <p style="margin-top: 8px;">Квалификация: @a.Student.Group.Specialization.NameQualification</p>
+                        <p style="margin-top: 8px;">Статус:
+                            @if (a.StatusReuqest == 0)
+                            {
+                                <text>Создано. На проверке у сотрудника отдела производтсвенного обучения</text>
+                            }
+                            @if (a.StatusReuqest == 1)
+                            {
+                                <text>Принятно. Ожидание подписания документов</text>
+                            }
+                            @if (a.StatusReuqest == 2)
+                            {
+                                <text>Принятно. Документы подписаны. Студент распределён</text>
+                            }
+                            @if (a.StatusReuqest == 3)
+                            {
+                                <text>Отказано.</text>
+                            }
+                        </p>
+                        @*<div onclick="infoStudent(@a.Resume.StudentId, 2, @a.VacancyId);" style="margin-top: 8px; width: fit-content; cursor: pointer; color: blue;">Подробнее</div>*@
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+@*    <script>
+        function infoStudent(idStudent, typeResponse, vacancy) {
+            $.ajaxSetup({ cache: false });
+            $.get('/ManageVacancy/InfoResponse?IdStudent=' + idStudent + '&IdVacancy=' + vacancy + '&typeResponse=' + typeResponse + '&fromDelete=2', function (data) {
+                $('#dialogContent').html(data);
+                $('#modDialog').show();
+            });
+        };
+    </script>*@
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-sortList="@(Model.FilterViewModel.SortList)"
+               page-url-filterListType="@(Model.FilterViewModel.FilterListType)"
+               page-url-filterListStatus="@(Model.FilterViewModel.FilterListStatus)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

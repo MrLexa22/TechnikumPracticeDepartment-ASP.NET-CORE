@@ -1,0 +1,257 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsPracticeChartPages
+@model AddEditPracticeChart
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+
+<style>
+    .information_div > div > div > div:not(:last-child) {
+        width: 500px !important;
+    }
+</style>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_PracticeChart != 0)
+                {
+                    <p class="employees_title">@Model.NamePractice</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление периода практики</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="PracticeChart" asp-action="AddEditPracticeChartPost" asp-route-id="@Model.ID_PracticeChart" method="post" class="callback-from">
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Практика</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_PracticeChart == 0){<text>style="display: none;"</text>} id="old_YearOfEducation" old_selected_YearOfEducation="@Model.SelectedIdPractice">
+                                    @if (Model.ID_PracticeChart > 0)
+                                    {
+                                        @Model.NamePractice
+                                    }
+                                </p>
+                                <div class="inputs_YearOfEducation inputs_values" @if(Model.ID_PracticeChart != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <select onchange="changePractide()" class="select_option" id="select_YearOfEducation" asp-for="SelectedIdPractice">
+                                        @foreach(var a in Model.list_practice)
+                                        {
+                                            <option value="@a.IdPractice">@a.NamePractice (@a.NameProfModule)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            @if (Model.IsEndedPractice == true)
+                            {
+                                <div @if(Model.ID_PracticeChart == 0){<text>style="display: none;"</text>}>
+                                    <a id="editBTN_YearOfEducation" onclick="edit_Select('YearOfEducation',true);" href="#"><img id="img_edit_YearOfEducation" src="~/images/edit.svg"><img onclick="changePractide();" style="display: none;" id="img_cross_YearOfEducation" src="~/images/cross.svg"></a>
+                                </div>
+                            }
+                            else
+                            {
+                                <div></div>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <p>Дни практики</p>
+                        <div>
+                            <div>
+                                <div class="inputs_CodeBlock inputs_values">
+                                    @if (Model.IsEndedPractice == true)
+                                    {
+                                        @for (int i = 0; i < Model.list_days.Count(); i++)
+                                        {
+                                            <div style="display:none;">
+                                                <input type="text" asp-for="@Model.list_days[i].ShortNameDay">
+                                            </div>
+                                            <input type="checkbox" asp-for="@Model.list_days[i].IsSelected" class="custom-checkbox child" id="group_@i">
+                                            <label style="color: black;" for="group_@i">@Model.list_days[i].NameDay</label>
+                                            <div></div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach(var a in Model.list_days.Where(p=>p.IsSelected == true))
+                                        {
+                                            <label style="color: black;" for="group_@a.ShortNameDay">@a.NameDay</label>
+                                            <div></div>
+                                        }
+                                    }
+                                    @if (Model.IsEndedPractice == true){<p style="font-style: italic; color: black; max-width: 530px;">!В случае, если ни один из вариантов не будет выбран, то значение по умолчанию - все дни!</p>}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if(Model.ID_PracticeChart <= 0)
+                    {
+                        <div>
+                            <p>Период практики</p>
+                            <div>
+                                <div>
+                                    <div>
+                                        <p style="color: black;">Дата начала практики: </p>
+                                        <input asp-for="dateStartCreate" style="background-color: rgb(190, 190, 190);border: 1px solid rgb(152, 152, 152);padding: 4px;" type="date" style="width: 100%;"></input>
+                                        <p style="max-width: 330px;"><span asp-validation-for="dateStartCreate" style="color: red;"></span></p>
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <p style="color: black;">Дата окончания практики: </p>
+                                        <input asp-for="dateEndCreate" style="background-color: rgb(190, 190, 190);border: 1px solid rgb(152, 152, 152);padding: 4px;" type="date" style="width: 100%;"></input>
+                                        <p style="max-width: 330px;"><span asp-validation-for="dateEndCreate" style="color: red;"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="color: black; font-style: italic; font-weight: normal;">При добавлении укажите один период. После добавления Вы сможете добавить ещё период практики</p>
+                        </div>
+                    }
+                    else
+                    {
+                        if(Model.IsEndedPractice == false)
+                        {
+                            <div>
+                                <p>Период(ы) практики</p>
+                                <div>
+                                    <div>
+                                        @for(int i = 0; i<Model.list_dates.Count(); i++)
+                                        {
+                                            <p>Период @(i + 1): @Model.list_dates[i].DateStart.ToShortDateString()-@Model.list_dates[i].DateEnd.ToShortDateString()</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <p>Период(ы) практики</p>
+                                <div>
+                                    <div>
+                                        <a class="btn_add edus" onclick="addEditPracticeChartDate(@Model.ID_PracticeChart, 0);" style="width: fit-content; cursor: pointer; margin-bottom: 8px;">
+                                            <div class="btn_add_text"><img src="~/images/plus.svg" style="width: 15px; height: 15px; vertical-align: middle;"></img> Добавить период</div>
+                                        </a>
+                                        @for(int i = 0; i<Model.list_dates.Count(); i++)
+                                        {
+                                            <div style="display: flex; margin-bottom: 12px;">
+                                                <p style="color: black; margin-right: 10px;">Период @(i + 1): @Model.list_dates[i].DateStart.ToShortDateString()-@Model.list_dates[i].DateEnd.ToShortDateString()</p>
+                                                <div style="display: flex;">
+                                                    <a onclick="addEditPracticeChartDate(@Model.ID_PracticeChart, @Model.list_dates[i].IdDatePracticeChart);" style="margin-right: 8px; cursor: pointer;"><img src="~/images/edit.svg"></a>
+                                                    @if(Model.list_dates.Count() > 1)
+                                                    {
+                                                        <a style="cursor: pointer;" asp-controller="PracticeChart" asp-action="DeletePracticeChartDate" asp-route-id="@Model.list_dates[i].IdDatePracticeChart"><img src="~/images/cross.svg"></a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    <div>
+                        <p>Количество часов</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_PracticeChart == 0){<text>style="display: none;"</text>} id="old_Email">@if(Model.ID_PracticeChart > 0){<text>@Model.hours.ToString()</text>}</p>
+                                <div class="inputs_Email inputs_values" @if(Model.ID_PracticeChart != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="hours" class="search-field" id="input_Email" style="width: 100%;" placeholder="Укажите количество часов"></input>
+                                    </div>
+                                    <span asp-validation-for="hours" style="color: red;"></span>
+                                </div>
+                            </div>
+                            @if (Model.IsEndedPractice == true)
+                            {
+                                <div @if(Model.ID_PracticeChart == 0){<text>style="display: none;"</text>}>
+                                    <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="block_info">
+                    <p class="block_title">Прикреплённые группы</p>
+                    <table class="table_roles" style="height: fit-content;">
+                        <tr>
+                            <th>
+                                <p>Группы</p>
+                            </th>
+                            <th id="panel_groups"></th>
+                        </tr>
+                    </table>
+                    @if (Model.IsEndedPractice == true){<p style="font-style: italic; color: black; margin-left: 10px;">!В случае, если ни один из вариантов не будет выбран, то значение по умолчанию - первая группа в списке!</p>}
+                </div>
+                @if (Model.IsEndedPractice == true)
+                {
+                    <div class="block_info">
+                        <div style="display: flex; margin-top: 10px;">
+                            <input type="submit" class="btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p style="color: black; font-weight: bold; margin-left: 10px;">Практика закончилась, изменение данные невозможно!</p>
+                }
+            </form>
+            @if (Model.IsEndedPractice == true && Model.ID_PracticeChart > 0)
+            {
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div class="block_info">
+                    <p class="block_title">Удаление практики (практика будет безвозвратно удалена!)</p>
+                    <table style="height: fit-content; border-collapse: unset;">
+                        <tr>
+                            <th>
+                                <a type="submit" class="btn btn_save" style="cursor: pointer; color: white; margin-left: 0; background-color: #e84957;" asp-route-id="@Model.ID_PracticeChart" asp-action="DeletePracticeChart" asp-controller="PracticeChart">Удалить практику</a>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="PracticeChart">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=2');
+    $('#panel_groups').load('@Url.Action("GetListGroups", "PracticeChart")?idPracticeChart=@Model.ID_PracticeChart&selectedIdPractice=' + $("#select_YearOfEducation").val());
+    function changePractide(){
+        setTimeout(() => { $('#panel_groups').load('@Url.Action("GetListGroups", "PracticeChart")?idPracticeChart=@Model.ID_PracticeChart&selectedIdPractice=' + $("#select_YearOfEducation").val()); }, 500);
+    }
+    function addEditPracticeChartDate(idPracticeChart, idChartDate) {
+        $.ajaxSetup({ cache: false });
+        $.get('/PracticeChart/AddEditDatePracticeChart?idPracticeChart=' + idPracticeChart + '&idChartDate=' + idChartDate, function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.5"></script>
+<script type="text/javascript" src="~/js/select.js"></script>

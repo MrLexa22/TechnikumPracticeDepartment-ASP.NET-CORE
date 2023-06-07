@@ -1,0 +1,148 @@
+﻿@using TechnikumPracticeDepartment.ModelsDB
+@model List<Specialization>
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Резюме студентов</p>
+        <div class="search" style="max-height: 35px; width: 50%;">
+            <input oninput="change()" id="input_search" type="text" class="search-field" placeholder="Введите наименование резюме">
+            <img src="images/search.svg" alt="" class="search-icon">
+        </div>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel"></div>
+        </div>
+        <div class="filter_main_panel">
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Фильтры</p>
+                </div>
+                <div class="select_filter">
+                    <p>Сортировать по</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="sortList">
+                            <option value="0">Умолчанию</option>
+                            <option value="1">Наименованию</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по квалификации специальности</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="filterSpecializaion">
+                            <option value="0">Умолчанию</option>
+                            @foreach(var a in Model)
+                            {
+                                <option value="@a.IdSpecialization">@a.NameQualification</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по курсу</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="filterCourse">
+                            <option value="0">Любой</option>
+                            <option value="1">1 курс</option>
+                            <option value="2">2 курс</option>
+                            <option value="3">3 курс</option>
+                            <option value="4">4 курс</option>
+                            <option value="5">5 курс</option>
+                            <option value="6">6 курс</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по тэгам</p>
+                    <div>
+                        <select style="width: 100%;" multiple="multiple" class="tags_input" onchange="change()" id="filterList"></select>
+                        <p id="warning-text" style="display: none; color: red; margin-top: 10px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    let timer;
+    $(".tags_input").select2({
+        tags: true,
+        maximumSelectionLength: 25,
+        createTag: function (params) {
+            let text = params.term;
+            $('#warning-text').show();
+            if (text.includes(";") || text.includes(",")) {
+                $("#warning-text").text(`"${text}", некорректно... Не допускается символы ';' ',`);
+                return null;
+            }
+            if (text.trim().length < 2 || text.trim().length > 20) {
+                $("#warning-text").text(`"${text}", некорректно... минимум 3 символа, максимум 20`);
+                return null;
+            }
+            else {
+                $("#warning-text").hide();
+                return {
+                    id: params.term.trim(),
+                    text: params.term.trim(),
+                    tag: true
+                }
+            }
+            return null;
+        },
+    });
+    var url = '@Url.Action("GetList", "ResumeStudents")';
+    $('#panel').load(url);
+    @if (User.IsInRole("Работадатель"))
+    {
+        <text>$('.left_men').load('@Url.Action("LeftMenuOrganization", "Additional")?index=3');</text>
+    }
+    else
+    {
+        <text>$('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=6'); </text>
+    }
+
+    function replaceAll(str, find, replace) {
+        try {
+            str = str.toString();
+            return str.replace(new RegExp(find, 'g'), replace);
+        }
+        catch {
+            return "";
+        }
+    }
+
+    function searchWithFilter() {
+        var url = '@Url.Action("GetList", "ResumeStudents")?search=' + document.getElementById("input_search").value + '&course=' + document.getElementById("filterCourse").value + "&specializationId=" + document.getElementById("filterSpecializaion").value + '&typeSortList=' + document.getElementById("sortList").value + '&filterTags=' + replaceAll($('#filterList').val(), ',', ';');
+        $('#panel').load(url);
+    }
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+    function change() {
+        clearTimeout(timer);
+        timer = setTimeout(searchWithFilter, 1000);
+    }
+
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>

@@ -1,0 +1,102 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model DistributionStudentWithPractices
+<link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+<link rel="stylesheet" type="text/css" href="~/css/calendar.css" />
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/custom_2.css" />
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<style>
+    .block_container{
+        color: black;
+        width: 100%;
+        padding: 20px;
+    }
+    .block_container > div > div > p{
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .block_container > div > div > p > span{
+        font-weight: normal;
+    }
+
+    .container_practice{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .container_practice > div {
+        flex: 0 0 31.333333%;
+        padding: 20px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+        border: solid 1px black;
+        border-radius: 15px;
+    }
+    @@media(max-width: 1024px){
+        .container_practice > div {
+            flex: 0 0 45.333333%;
+        }
+    }
+
+    @@media(max-width: 580px) {
+        .container_practice > div {
+            flex: 0 0 95.333333%;
+            margin-left: 0px;
+        }
+        .flex_student{
+            display: block !important
+        }
+        .text_p_student{
+            font-size: 11px;
+        }
+    }
+    .flex_student{
+        display: flex;
+    }
+</style>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div style="color: white;" class="left_men"></div>
+</div>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="block_container">
+    <div>
+        <h1 style="margin-top: 10px; margin-bottom: 10px;">Данные о студентах, проходящих практику</h1>
+        <div class="container_practice">
+            @foreach(var a in Model.list)
+            {
+                <div>
+                    <p style="font-weight: bold; font-style: italic; text-decoration: underline;">Информация о студенте:</p>
+                    <p style="font-weight: bold; margin-top: 12px;">ФИО: <p>@a.student.User.SurnameUser @a.student.User.NameUser @a.student.User.PatronymicNameUser?.ToString()</p></p>
+                    <p style="font-weight: bold; margin-top:12px;">Специальность: <p>[@a.student.Group.Specialization.SpecializationCode] @a.student.Group.Specialization.SpecializationName</p></p>
+                    <p style="font-weight: bold; margin-top:12px;">Квалификация: <p>@a.student.Group.Specialization.NameQualification</p></p>
+                    <p style="font-weight: bold; margin-top:12px;">Группа: <p>@a.student.Group.NameGroup</p></p>
+                    <div onclick="infoStudent(@a.student.IdStudent);" style="color: blue; font-style: italic; cursor: pointer; width: fit-content; margin-top: 10px;">Подробнее</div>
+                </div>
+             }
+        </div>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div style="display: flex; margin-top: 20px;">
+        <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Home">
+            <p>На главную страницу</p>
+        </a>
+    </div>
+</div>
+<script>
+    $('.left_men').load('@Url.Action("LeftMenuOrganization", "Additional")?index=1');
+    function infoStudent(idStudent) {
+        $.ajaxSetup({ cache: false });
+        $.get('/OrganizationStudents/InfoStudent?IdStudent=' + idStudent, function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+</script>

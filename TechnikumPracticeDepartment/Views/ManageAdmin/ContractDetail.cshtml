@@ -1,0 +1,425 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsContractDetail
+@model ContractDetail
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<style>
+    .info_student > div > p {
+        margin-bottom: 10px;
+    }
+
+    .information_div > div > div {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .main_panel {
+        padding: 0 !important;
+    }
+
+    .info_student > div > h3 {
+        margin-bottom: 15px;
+    }
+
+    .info_student > div > p > span {
+        font-weight: bold;
+    }
+
+    .info_student {
+        display: flex;
+    }
+
+        .info_student > div {
+            width: 50%;
+        }
+
+    .info_block > p > span {
+        font-weight: bold;
+    }
+
+    .info_block > p {
+        margin-bottom: 10px;
+        word-wrap: break-word;
+    }
+
+    .info_block {
+        width: 70%;
+    }
+
+    .textarea_input {
+        width: 500px;
+        height: 200px;
+        padding: 10px;
+        font-family: 'Raleway', Calibri, Arial, sans-serif;
+        color: black;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        color: black;
+    }
+
+    .pdf_block {
+        width: 90%;
+        height: 678px;
+    }
+
+    .tag {
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+
+    @@media(max-width:550px) {
+        .info_student {
+            display: block !important;
+        }
+
+        .info_block {
+            width: 90%;
+        }
+
+        .info_student > div {
+            width: 90%;
+        }
+
+        .textarea_input {
+            width: 90%;
+            height: 200px;
+            padding: 10px;
+            font-family: 'Raleway', Calibri, Arial, sans-serif;
+            color: black;
+        }
+
+        .input_dan {
+            width: 90% !important;
+        }
+
+        .tags_input {
+            width: 90% !important;
+        }
+
+        .select2-container {
+            width: 90% !important;
+        }
+
+        .pdf_block {
+            width: 90% !important;
+            height: 678px;
+        }
+    }
+</style>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Реквизиты университета для договоров</p>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel">
+                @if (Model.Error == true)
+                {
+                    <h2 style="color: red;">При изменении реквизитов произошла ошибка. Повторите попытку</h2>
+                }
+                <form asp-action="UpdateContractDetail" method="post" enctype="multipart/form-data">
+                    <div class="information_div" style="height: fit-content;">
+                        <div>
+                            <p>Фамилия директора в иминительном падеже (Иванов)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="SurnameDirector_IM" type="text" class="search-field" style="width: 100%;" placeholder="Фамилия директора в иминительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="SurnameDirector_IM" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Имя директора в иминительном падеже (Иван)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="NamameDirector_IM" type="text" class="search-field" style="width: 100%;" placeholder="Имя директора в иминительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="NamameDirector_IM" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Отчество директора в иминительном падеже (Иванович)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="PatronymicNameDirector_IM" type="text" class="search-field" style="width: 100%;" placeholder="Отчестов директора в иминительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="PatronymicNameDirector_IM" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Текущий вариант инициалов:</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <p>@Model.SurnameDirector_IM @(Model.NamameDirector_IM[0]). @if(Model.PatronymicNameDirector_IM != null && Model.PatronymicNameDirector_IM != ""){<text>@(Model.PatronymicNameDirector_IM[0]).</text>}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr_style" size="1px" noshade>
+                        <div>
+                            <p>Фамилия директора в родительном падеже (Иванова)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="SurnameDirector_ROD" type="text" class="search-field" style="width: 100%;" placeholder="Фамилия директора в родительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="SurnameDirector_ROD" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Имя директора в родительном падеже (Ивана)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="NamameDirector_ROD" type="text" class="search-field" style="width: 100%;" placeholder="Имя директора в родительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="NamameDirector_ROD" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Отчество директора в родительном падеже (Ивановича)</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="PatronymicNameDirector_ROD" type="text" class="search-field" style="width: 100%;" placeholder="Отчестов директора в родительном падеже"></input>
+                                        </div>
+                                        <span asp-validation-for="PatronymicNameDirector_ROD" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Текущий вариант написания ФИО директора в род. падеже:</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <p>в лице Директора Московского приборостроительного техникума <span style="font-weight: bold;">@Model.SurnameDirector_ROD @(Model.NamameDirector_ROD) @if(Model.PatronymicNameDirector_ROD != null && Model.PatronymicNameDirector_ROD != ""){<text>@(Model.PatronymicNameDirector_ROD)</text>}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr_style" size="1px" noshade>
+                        <div>
+                            <p>Дата выдачи доверенности</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="DovernDate" type="date" class="search-field" style="width: 100%;" placeholder="Дата выдачи доверенности"></input>
+                                        </div>
+                                        <span asp-validation-for="DovernDate" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Номер доверенности</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="NumberDovern" type="text" class="search-field" style="width: 100%;" placeholder="Номер доверенности"></input>
+                                        </div>
+                                        <span asp-validation-for="NumberDovern" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Текущий вариант реквизитов доверенности:</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <p>на основании доверенности от «@Model.DovernDate.Day» @Model.DovernDate.ToString("MMMM") @Model.DovernDate.Year года №@Model.NumberDovern</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="hr_style" size="1px" noshade>
+                        <div>
+                            <p>Адрес университета</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="AddressUniversity" type="text" class="search-field" style="width: 100%;" placeholder="Адрес университета"></input>
+                                        </div>
+                                        <span asp-validation-for="AddressUniversity" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>ИНН университета</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="INN_University" type="text" class="search-field" style="width: 100%;" placeholder="ИНН университета"></input>
+                                        </div>
+                                        <span asp-validation-for="INN_University" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>КПП университета</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="KPP_University" type="text" class="search-field" style="width: 100%;" placeholder="КПП университета"></input>
+                                        </div>
+                                        <span asp-validation-for="KPP_University" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>ОКТМО университета</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="OKTMO_University" type="text" class="search-field" style="width: 100%;" placeholder="ОКТМО университета"></input>
+                                        </div>
+                                        <span asp-validation-for="OKTMO_University" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Банк университета</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <div class="input_dan search">
+                                            <input asp-for="Bank_University" type="text" class="search-field" style="width: 100%;" placeholder="Банк университета"></input>
+                                        </div>
+                                        <span asp-validation-for="Bank_University" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p>Текущий вариант реквизитов университета:</p>
+                            <div>
+                                <div>
+                                    <div class="inputs_Email inputs_values" style="display: grid;">
+                                        <p>Университет:</p>
+                                        <p>ФГБОУ ВО "РЭУ им. Г.В. Плеханова"</p>
+                                        <p>@Model.AddressUniversity</p>
+                                        <p>ИНН @Model.INN_University КПП @Model.KPP_University</p>
+                                        <p>ОКТМО @Model.OKTMO_University</p>
+                                        <p>@Model.Bank_University</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info_block">
+                        <div style="display: flex; margin-top: 10px;">
+                            <div onclick="exp();" style="color: blue; width: fit-content; cursor: pointer;">Скачать текущий шаблон договора (без изменений)</div>
+                        </div>
+                    </div>
+                    <div class="info_block">
+                        <div style="display: flex; margin-top: 10px;">
+                            <div><input type="submit" class="btn btn_save" style="height: 80%; cursor: pointer; margin-bottom: 10px; color: white; background-color:forestgreen; padding: 6px 20px; border: 1px solid rgb(132, 132, 132); border-radius: 5px;" value="Сохранить изменения" /></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=6');
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+    function exp() {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        xhr.open("GET", "/CotractDetails/downloadExample", true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>

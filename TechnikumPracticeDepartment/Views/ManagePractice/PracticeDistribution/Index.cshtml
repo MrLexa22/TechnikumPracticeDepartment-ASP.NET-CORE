@@ -1,0 +1,153 @@
+﻿@using TechnikumPracticeDepartment.ModelsDB
+@model List<Specialization>
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Распределение студентов</p>
+        <div class="search" style="max-height: 35px; width: 50%;">
+            <input oninput="change()" id="input_search" type="text" class="search-field" placeholder="Введите наименование группы/ФИО студента">
+            <img src="images/search.svg" alt="" class="search-icon">
+        </div>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel"></div>
+        </div>
+        <div class="filter_main_panel">
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Фильтры</p>
+                </div>
+                <div class="select_filter">
+                    <p>Сортировать по</p>
+                    <div>
+                        <select onchange="change()" class="select_option" id="sortList">
+                            <option value="0">Умолчанию</option>
+                            <option value="1">Наименованию группы</option>
+                            <option value="2">Курсу</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по специальности</p>
+                    <div>
+                        <select onchange="change()" class="select_option" id="filterListBySpecializaion">
+                            <option value="0">Любая</option>
+                            @foreach (var a in Model)
+                            {
+                                <option value="@a.IdSpecialization">@a.SpecializationCode</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по курсу</p>
+                    <div>
+                        <select onchange="change()" class="select_option" id="filterListByCourse">
+                            <option value="0">Любой</option>
+                            <option value="1">1 курс</option>
+                            <option value="2">2 курс</option>
+                            <option value="3">3 курс</option>
+                            <option value="4">4 курс</option>
+                            <option value="5">5 курс</option>
+                            <option value="6">6 курс</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по активности группы</p>
+                    <div>
+                        <select onchange="change()" class="select_option" id="filterListByActive">
+                            <option value="0">Активная (не завершившая обучение)</option>
+                            <option value="1">Завершившая обучение</option>
+                            <option value="2">Любая</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Экспорт</p>
+                </div>
+                <div class="select_filter">
+                    <a class="btn_add edus" onclick="exps();" style="cursor: pointer">
+                        <div class="btn_add_text">Экспорт в DOCX по фильтрам</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    let timer;
+    var url = '@Url.Action("GetList", "PracticeDistribution")?filterListByAvaliable=' + document.getElementById("filterListByActive").value;
+    $('#panel').load(url);
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+    $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=3');
+    function searchWithFilter() {
+        var url = '@Url.Action("GetList", "PracticeDistribution")?search=' + document.getElementById("input_search").value + 
+                                                                '&typeSortList=' + document.getElementById("sortList").value + 
+                                                                '&filterListBySpecializaion=' + document.getElementById("filterListBySpecializaion").value + 
+                                                                '&filterListByCourse=' + document.getElementById("filterListByCourse").value + 
+                                                                '&filterListByAvaliable=' + document.getElementById("filterListByActive").value;
+        $('#panel').load(url);
+    }
+
+    function change() {
+        clearTimeout(timer);
+        timer = setTimeout(searchWithFilter, 1000);
+    }
+
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+
+    function exps() {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        xhr.open("GET", "PracticeDistribution/downloadDocxExport?filterListBySpecializaion=" + document.getElementById("filterListBySpecializaion").value + '&filterListByAvaliable=' + document.getElementById("filterListByActive").value + '&filterListByCourse=' + document.getElementById("filterListByCourse").value, true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>
+

@@ -1,0 +1,9 @@
+﻿@model int
+<ul class="left_men_ul">
+    @if(User.IsInRole("Администратор")){<li @if(Model == 1) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Employees">Сотрудники</a></li>}
+    <li @if(Model == 2) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Students">Студенты</a></li>
+    <li @if(Model == 4) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Organizations">Организации</a></li>
+    @if(User.IsInRole("Администратор")){<li @if(Model == 3) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Specialization">Специальности</a></li>}
+    @if(User.IsInRole("Администратор")){<li @if(Model == 5) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Groups">Учебные группы</a></li>}
+    @if(User.IsInRole("Администратор")){<li @if(Model == 6) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="CotractDetails">Реквизиты для договоров</a></li>}
+</ul>

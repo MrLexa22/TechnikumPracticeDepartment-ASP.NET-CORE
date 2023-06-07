@@ -1,0 +1,395 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsManageResponses
+@model ResponseFromOrganizationOrStudent
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<style>
+    .info_student > div > p {
+        margin-bottom: 10px;
+    }
+
+    .information_div > div > div {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .main_panel {
+        padding: 0 !important;
+    }
+
+    .info_student > div > h3 {
+        margin-bottom: 15px;
+    }
+
+    .info_student > div > p > span {
+        font-weight: bold;
+    }
+
+    .info_student {
+        display: flex;
+    }
+
+        .info_student > div {
+            width: 50%;
+        }
+
+    .info_block > p > span {
+        font-weight: bold;
+    }
+
+    .info_block > p {
+        margin-bottom: 10px;
+        word-wrap: break-word;
+    }
+
+    .info_block {
+        width: 70%;
+    }
+
+    .textarea_input {
+        width: 500px;
+        height: 200px;
+        padding: 10px;
+        font-family: 'Raleway', Calibri, Arial, sans-serif;
+        color: black;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        color: black;
+    }
+
+    .pdf_block {
+        width: 90%;
+        height: 678px;
+    }
+
+    .tag {
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+
+    @@media(max-width:550px) {
+        .info_student {
+            display: block !important;
+        }
+
+        .info_block {
+            width: 90%;
+        }
+
+        .info_student > div {
+            width: 90%;
+        }
+
+        .textarea_input {
+            width: 90%;
+            height: 200px;
+            padding: 10px;
+            font-family: 'Raleway', Calibri, Arial, sans-serif;
+            color: black;
+        }
+
+        .input_dan {
+            width: 90% !important;
+        }
+
+        .tags_input {
+            width: 90% !important;
+        }
+
+        .select2-container {
+            width: 90% !important;
+        }
+
+        .pdf_block {
+            width: 90% !important;
+            height: 678px;
+        }
+    }
+</style>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Отклик @if (Model.typeResponse == 1) { <text>студента на вакансию организации</text> }else{<text>организации на резюме студента</text>}</p>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel">
+                <h3>Информация о текущем отклике от @if (Model.typeResponse == 1) { <text>@Model.ResponseFromStudent.DateTimeCreate.ToShortDateString() @Model.ResponseFromStudent.DateTimeCreate.ToShortTimeString()</text> }else{ <text>@Model.ResponseFromOrganization.DateTimeCreate.ToShortDateString() @Model.ResponseFromOrganization.DateTimeCreate.ToShortTimeString()</text> }</h3>
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Статус отклика:</p>
+                        <div>
+                            <p>
+                                @if(Model.typeResponse == 1)
+                                {
+                                    @if(Model.ResponseFromStudent.Status == 3)
+                                    {
+                                        <text>Организация приняла студента на практику. Ожидание распределения от отдела производтсвенного обучения</text>
+                                    }
+                                    @if (Model.ResponseFromStudent.Status == 4)
+                                    {
+                                        <text>Студент распределён в организацию "@Model.ResponseFromStudent.Vacancy.Organization.NotFullNameOrganization"</text>
+                                    }
+                                    @if (Model.ResponseFromStudent.Status == 6)
+                                    {
+                                        <text>Отказано отделом производтсвенного обучения в распределении</text>
+                                    }
+                                }
+                                @if (Model.typeResponse == 2)
+                                {
+                                    @if (Model.ResponseFromOrganization.Status == 3)
+                                    {
+                                        <text>Студент принял приглашение от организации. Ожидание распределения от отдела производтсвенного обучения</text>
+                                    }
+                                    @if (Model.ResponseFromOrganization.Status == 4)
+                                    {
+                                        <text>Студент распределён в организацию "@Model.ResponseFromOrganization.Vacancy.Organization.NotFullNameOrganization"</text>
+                                    }
+                                    @if (Model.ResponseFromOrganization.Status == 6)
+                                    {
+                                        <text>Отказано отделом производтсвенного обучения в распределении</text>
+                                    }
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Организация и вакансия:</p>
+                        <div>
+                            @if (Model.typeResponse == 1)
+                            {
+                                <p>
+                                    Организация: <a asp-action="AddEditOrganization" asp-controller="Organizations" asp-route-id="@Model.ResponseFromStudent.Vacancy.OrganizationId" style="color: blue;" target="_blank">@Model.ResponseFromStudent.Vacancy.Organization.FullNameOrganization</a>
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Вакансия: <a asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@Model.ResponseFromStudent.VacancyId" style="color: blue;" target="_blank">@Model.ResponseFromStudent.Vacancy.NameVacancy</a>
+                                </p>
+                            }
+                            @if(Model.typeResponse == 2)
+                            {
+                                <p>
+                                    Организация: <a asp-action="AddEditOrganization" asp-controller="Organizations" asp-route-id="@Model.ResponseFromOrganization.Vacancy.OrganizationId" style="color: blue;" target="_blank">@Model.ResponseFromOrganization.Vacancy.Organization.FullNameOrganization</a>
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Вакансия: <a asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@Model.ResponseFromOrganization.VacancyId" style="color: blue;" target="_blank">@Model.ResponseFromOrganization.Vacancy.NameVacancy</a>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <p>Студент и резюме:</p>
+                        <div>
+                            @if (Model.typeResponse == 1)
+                            {
+                                <p>
+                                    Студент: <a asp-action="AddEditStudent" asp-controller="Students" asp-route-id="@Model.ResponseFromStudent.StudentId" style="color: blue;" target="_blank">@Model.ResponseFromStudent.Student.User.SurnameUser @Model.ResponseFromStudent.Student.User.NameUser @Model.ResponseFromStudent.Student.User.PatronymicNameUser?.ToString() (@Model.ResponseFromStudent.Student.User.Email)</a>
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Группа: @Model.ResponseFromStudent.Student.Group.NameGroup
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Резюме: <a asp-action="ResumeStudent" asp-controller="Students" asp-route-id="@Model.ResponseFromStudent.StudentId" style="color: blue;" target="_blank">@Model.ResponseFromStudent.Student.Resume.DesiredPosition</a>
+                                </p>
+                            }
+                            @if (Model.typeResponse == 2)
+                            {
+                                <p>
+                                    Студент: <a asp-action="AddEditStudent" asp-controller="Students" asp-route-id="@Model.ResponseFromOrganization.Resume.StudentId" style="color: blue;" target="_blank">@Model.ResponseFromOrganization.Resume.Student.User.SurnameUser @Model.ResponseFromOrganization.Resume.Student.User.NameUser @Model.ResponseFromOrganization.Resume.Student.User.PatronymicNameUser?.ToString() (@Model.ResponseFromOrganization.Resume.Student.User.Email)</a>
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Группа: @Model.ResponseFromOrganization.Resume.Student.Group.NameGroup
+                                </p>
+                                <p style="margin-top: 8px;">
+                                    Резюме: <a asp-action="ResumeStudent" asp-controller="Students" asp-route-id="@Model.ResponseFromOrganization.Resume.StudentId" style="color: blue;" target="_blank">@Model.ResponseFromOrganization.Resume.DesiredPosition</a>
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <p>Комментарий студента:</p>
+                        <div>
+                            @if (Model.typeResponse == 1)
+                            {
+                                <p>
+                                    @Html.Raw(Model.ResponseFromStudent.CommentStudent?.Replace(Environment.NewLine, "<br/>"))
+                                </p>
+                            }
+                            @if (Model.typeResponse == 2)
+                            {
+                                <p>
+                                    @Html.Raw(Model.ResponseFromOrganization.CommentStudent?.Replace(Environment.NewLine, "<br/>"))
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <p>Комментарий организации:</p>
+                        <div>
+                            @if (Model.typeResponse == 1)
+                            {
+                                <p>
+                                    @Html.Raw(Model.ResponseFromStudent.CommentOrganization?.Replace(Environment.NewLine, "<br/>"))
+                                </p>
+                            }
+                            @if (Model.typeResponse == 2)
+                            {
+                                <p>
+                                    @Html.Raw(Model.ResponseFromOrganization.CommentOrganization?.Replace(Environment.NewLine, "<br/>"))
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                @if (Model.StatusResponse == 3)
+                {
+                    <h3>Принятие отклика. Распределение студента</h3>
+                    @if (Model.list_practice.Count() > 0)
+                    {
+                        <form method="post" enctype="multipart/form-data" asp-action="AcceptResponse" asp-route-typeResponse="@Model.typeResponse" asp-route-id="@if(Model.typeResponse == 1){<text>@Model.ResponseFromStudent.IdResponse</text>}else{<text>@Model.ResponseFromOrganization.IdResponse</text>}">
+                            <div class="information_div" style="height: fit-content;">
+                                <div>
+                                    <p>Практики, на которые будет распределён студент:</p>
+                                    <div>
+                                        @for (int i = 0; i < Model.list_practice.Count(); i++)
+                                        {
+                                            <div style="margin-bottom: 10px;">
+                                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                                    <input type="text" asp-for="@Model.list_practice[i].ID_Practice">
+                                                </div>
+                                                <input type="checkbox" asp-for="@Model.list_practice[i].Selected" class="custom-checkbox child" id="group_practice@(i.ToString())">
+                                                <label class="child_el search__element_orgped" for="group_practice@(i.ToString())">
+                                                    <div>
+                                                        <p>@Model.list_practice[i].NamePractice</p>
+                                                        @foreach (var j in Model.list_practice[i].list_dates)
+                                                        {
+                                                            <p>С @j.DateStart.ToShortDateString() по @j.DateEnd.ToShortDateString()</p>
+                                                        }
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <p>Комментарий:</p>
+                                    <div>
+                                        <div>
+                                            <textarea asp-for="CommentAccept" class="textarea_input" style="resize: none;" placeholder="Комментарий"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p></p>
+                                    <div>
+                                        <div>
+                                            <input type="submit" class="btn btn_save" style="background-color: green; cursor: pointer; color: white;" value="Принять запрос" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="information_div" style="height: fit-content;">
+                            <div>
+                                <p>Практики, на которые будет распределён студент:</p>
+                                <div>
+                                    <p>Принятие отклика невозможно. Нет активных практик для распределения</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <hr class="hr_style" size="1px" noshade>
+                    <h3>Отклонение отклика</h3>
+                    <form method="post" enctype="multipart/form-data" asp-action="DiscardResponse" asp-route-typeResponse="@Model.typeResponse" asp-route-id="@if(Model.typeResponse == 1){<text>@Model.ResponseFromStudent.IdResponse</text>}else{<text>@Model.ResponseFromOrganization.IdResponse</text>}">
+                        <div class="information_div" style="height: fit-content;">
+                            <div>
+                                <p>Комментарий:</p>
+                                <div>
+                                    <div>
+                                        <textarea asp-for="CommentDiscard" class="textarea_input" style="resize: none;" placeholder="Комментарий"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p></p>
+                                <div>
+                                    <div>
+                                        <input type="submit" class="btn btn_save" style="background-color: indianred; cursor: pointer; color: white;" value="Отклонить запрос" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.error == true)
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                          fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Ошибка!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">@Model.ErrorText.</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=4');
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>

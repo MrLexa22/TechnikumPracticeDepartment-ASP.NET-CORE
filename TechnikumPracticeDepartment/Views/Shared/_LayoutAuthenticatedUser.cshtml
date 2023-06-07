@@ -1,0 +1,182 @@
+﻿<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Электронный студент РЭУ им. Г. В. Плеханова</title>
+    <link rel="shortcut icon" href="~/images/favicon.ico">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/css/header_footer.css?version=2" />
+    <script src="~/js/modernizr.custom.63321.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200,400,800" rel="stylesheet" type="text/css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+    <script type="text/javascript" src="~/js/date.js" defer></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="https://snipp.ru/cdn/microplugin.js/src/microplugin.js"></script>
+    <script src="https://snipp.ru/cdn/sifter.js/sifter.min.js"></script>
+    <script src="https://snipp.ru/cdn/selectize.js/0.12.6/dist/js/selectize.min.js"></script>
+    <link href="https://snipp.ru/cdn/selectize.js/0.12.6/dist/css/selectize.default.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="menu_overlay" style="position: fixed; overflow: auto;">
+        <label for="menuBtn">
+            <i id="closeoverlay" class="fas">X</i>
+        </label>
+        <ul>
+            <li><img style="width: 80px; margin-left: 20px;" src="~/images/rea.png"></li>
+            <li class="homepage"><a href="/">Домашная страница</a></li>
+            <li><a asp-controller="Home" asp-action="PersonalAccount">Личный кабинет</a></li>
+            @if(User.IsInRole("Студент"))
+            {
+                <li class="overlay_list">
+                    <div>Практика:</div>
+                    <div><a asp-action="Index" asp-controller="StudentDocumentsPractice">+ Практики и документы</a></div>
+                    <div><a asp-action="Index" asp-controller="StudentResume">+ Моё резюме</a></div>
+                    <div><a asp-action="Index" asp-controller="StudentsResponses">+ Отклики</a></div>
+                    <div><a asp-action="Index" asp-controller="ManageVacancy">+ Вакансии</a></div>
+                    <div><a asp-action="DistributionResponse" asp-controller="StudentsResponses">+ Запрос на распределение</a></div>
+                </li>
+            }
+            @if (User.IsInRole("Работадатель"))
+            {
+                <li class="overlay_list">
+                    <div>Практика:</div>
+                    <div><a asp-action="Index" asp-controller="OrganizationStudents">+ Студенты на практике</a></div>
+                    <div><a asp-action="Index" asp-controller="ManageVacancy">+ Вакансии организации</a></div>
+                    <div><a asp-action="Index" asp-controller="ResumeStudents">+ Резюме студентов</a></div>
+                    <div><a asp-action="Index" asp-controller="ManageResponsesOrganization">+ Все отклики</a></div>
+                </li>
+            }
+            @if (User.IsInRole("Администратор") || User.IsInRole("Сотрудник производственного отдела"))
+            {
+                <li class="overlay_list">
+                    <div>Справочники:</div>
+                    @if (User.IsInRole("Администратор"))
+                    {
+                        <div><a asp-action="Index" asp-controller="Employees">+ Сотрудники</a></div>
+                    }
+                    <div><a asp-action="Index" asp-controller="Students">+ Студенты</a></div>
+                    <div><a asp-action="Index" asp-controller="Organizations">+ Организации</a></div>
+                    @if (User.IsInRole("Администратор"))
+                    {
+                        <div><a asp-action="Index" asp-controller="Specialization">+ Специальности</a></div>
+                    }
+                    @if (User.IsInRole("Администратор"))
+                    {
+                        <div><a asp-action="Index" asp-controller="Groups">+ Учебные группы</a></div>
+                        <div><a asp-action="Index" asp-controller="CotractDetails">+ Реквизиты для договоров</a></div>
+                    }
+                </li>
+                <li class="overlay_list">
+                    <div>Практики:</div>
+                    <div><a asp-action="Index" asp-controller="Practice">+ Практики</a></div>
+                    <div><a asp-action="Index" asp-controller="PracticeChart">+ Графики практик</a></div>
+                    <div><a asp-action="Index" asp-controller="PracticeDistribution">+ Распределение студентов</a></div>
+                    <div><a asp-action="Index" asp-controller="ManageResponses">+ Заявки</a></div>
+                    <div><a asp-action="Index" asp-controller="ManageVacancy">+ Вакансии</a></div>
+                    <div><a asp-action="Index" asp-controller="ResumeStudents">+ Резюме студентов</a></div>
+                </li>
+            }
+        </ul>
+    </div>
+    <header class="header3">
+        <div class="content">
+            <ul class="exo-menu">
+                <li>
+                    <div id="nav-icon1">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </li>
+                <li>
+                    <img style="width: 70px; margin-left: 20px;" src="~/images/rea.png">
+                </li>
+                <li>
+                    <a class="active" href="/">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                @if(User.IsInRole("Студент"))
+                {
+                    <li class="drop-down">
+                        <a href="#"><i class="fa fa-book"></i> Практика</a>
+                        <ul class="drop-down-ul animated fadeIn">
+                            <li><a asp-action="Index" asp-controller="StudentDocumentsPractice">Практики и документы</a></li>
+                            <li><a asp-action="Index" asp-controller="StudentResume">Моё резюме</a></li>
+                            <li><a asp-action="Index" asp-controller="StudentsResponses">Отклики</a></li>
+                            <li><a asp-action="Index" asp-controller="ManageVacancy">Вакансии</a></li>
+                            <li><a asp-action="DistributionResponse" asp-controller="StudentsResponses">Запрос на распределение</a></li>
+                        </ul>
+                    </li>
+                }
+                @if (User.IsInRole("Работадатель"))
+                {
+                    <li class="drop-down">
+                        <a href="#"><i class="fa fa-book"></i> Практика</a>
+                        <ul class="drop-down-ul animated fadeIn">
+                            <li><a asp-action="Index" asp-controller="OrganizationStudents">Студенты на практике</a></li>
+                            <li><a asp-action="Index" asp-controller="ManageVacancy">Вакансии организации</a></li>
+                            <li><a asp-action="Index" asp-controller="ResumeStudents">Резюме студентов</a></li>
+                            <li><a asp-action="Index" asp-controller="ManageResponsesOrganization">Все отклики</a></li>
+                        </ul>
+                    </li>
+                }
+                @if (User.IsInRole("Администратор") || User.IsInRole("Сотрудник производственного отдела"))
+                {
+                    <li class="drop-down">
+                        <a href="#"><i class="fa fa-book"></i> Справочники</a>
+                        <ul class="drop-down-ul animated fadeIn">
+                            @if(User.IsInRole("Администратор")){<li><a asp-action="Index" asp-controller="Employees">Сотрудники</a></li>}
+                            <li><a asp-action="Index" asp-controller="Students">Студенты</a></li>
+                            <li><a asp-action="Index" asp-controller="Organizations">Организации</a></li>
+                            @if(User.IsInRole("Администратор")){<li><a asp-action="Index" asp-controller="Specialization">Специальности</a></li>}
+                            @if(User.IsInRole("Администратор")){<li><a asp-action="Index" asp-controller="Groups">Учебные группы</a></li>}
+                            @if(User.IsInRole("Администратор")){<li><a asp-action="Index" asp-controller="CotractDetails">Реквизиты для договоров</a></li>}
+                        </ul>
+                    </li>
+                    <li class="drop-down">
+                        <a href="#"><i class="fa fa-briefcase"></i> Практики</a>
+                        <ul class="drop-down-ul animated fadeIn">
+                            <li><a asp-action="Index" asp-controller="Practice">Практики</a></li>
+                            <li><a asp-action="Index" asp-controller="PracticeChart">Графики практик</a></li>
+                            <li><a asp-action="Index" asp-controller="PracticeDistribution">Распределение студентов</a></li>
+                            <li><a asp-action="Index" asp-controller="ManageResponses">Заявки</a></li>
+                            <li><a asp-action="Index" asp-controller="ManageVacancy">Вакансии</a></li>
+                            <li><a asp-action="Index" asp-controller="ResumeStudents">Резюме студентов</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div style="align-self: center; display: flex; margin-left: auto; margin-right: 20px; padding-top: 10px; padding-bottom: 10px;">
+            <a asp-controller="Home" asp-action="PersonalAccount">
+                <img class="user-image" src="~/images/user.png">
+            </a>
+            <div class="nameUser">
+                <div style="line-height: 2.4;">@User.Identity.Name</div>
+            </div>
+            <a method="post" asp-controller="Account" asp-action="Logout">
+                <img class="user-image" style="margin-left: 20px;" src="~/images/logout.svg">
+            </a>
+        </div>
+    </header>
+    <div class="main">
+        @RenderBody()
+        <script type="text/javascript">
+            $('#nav-icon1').click(function () {
+                $(".menu_overlay").show();
+            });
+            $('#closeoverlay').click(function () {
+                $(".menu_overlay").hide();
+            });
+        </script>
+    </div>
+    <footer class="footer">
+        <span style="align-self: center;">Система "Электронный студент РЭУ им. Г. В. Плеханова"</span>
+        <span style="align-self: center; margin-left: auto;">© Опейкин Алексей Сергеевич</span>
+    </footer>
+</body>
+</html>

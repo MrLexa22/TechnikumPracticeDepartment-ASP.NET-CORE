@@ -1,0 +1,170 @@
+.information_div > div > div{
+    display: flex;
+}
+
+.information_div > div {
+    display: flex;
+}
+
+.information_div > div > div {
+    margin: 10px;
+}
+
+.information_div > div > div > div:not(:last-child) {
+    width: 300px;
+}
+
+.information_div > div > p {
+    color: rgb(103, 103, 103);
+    font-weight: bold;
+    width: 200px; 
+    margin: 10px;
+}
+
+.information_div > div > div > div > p {
+    color: black;
+}
+
+@media(max-width: 768px) {
+    .table_roles th:first-child{
+        display: none;
+    }
+    .search-results{
+        width: 100%!important;
+    }
+    .child_el{
+        margin-left: 0px!important;
+    }
+}
+
+.container_editWithTwoSections{
+    display: flex;
+}
+
+.second_container_edit{
+    margin-left: 20px;
+    max-width: 180px;
+}
+
+@media(max-width: 1000px){
+    .container_editWithTwoSections {
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .information_div > div {
+        display: block;
+    }
+
+    .information_div > div >div {
+        display: flex;
+        margin-bottom: 30px;
+    }
+}
+
+.main_panel {
+    padding: 15px;
+}
+
+.main_block{
+    padding: 15px;
+}
+
+.block_info {
+    padding-top: 20px;
+}
+
+.submit_btn {
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.block_title {
+    color: rgb(67, 67, 67);
+    font-weight: bold;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.table_roles {
+    width: 100%;
+}
+
+.table_roles tr {
+    border-bottom: none;
+}
+
+.table_roles th {
+    color: black;
+    text-align: left;
+    font-weight: normal;
+    vertical-align: top;
+}
+
+.table_roles th:first-child {
+    width: 180px;
+}
+
+.table_roles tr th:first-child {
+    color: rgb(103, 103, 103);
+    font-weight: bold;
+}
+
+.table_roles th div {
+    margin-bottom: 15px;
+}
+
+.table_disc tr th:first-child {
+    color: black !important;
+    font-weight: normal !important;
+}
+
+.table_disc th:first-child {
+    width: 100px !important;
+}
+
+.search-results {
+    border: 1px solid rgb(152, 152, 152);
+    width: 80%;
+    max-height: 350px;
+    position: relative;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.child_el {
+    margin-left: 20px;
+}
+
+.btn {
+    color: black;
+    padding: 6px 20px;
+    border: 1px solid rgb(132, 132, 132);
+    border-radius: 5px;
+}
+
+.btn p {
+    color: black;
+}
+
+.btn_save {
+    background-color: #cd5e30;
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.btn_save p {
+    color: white;
+    font-weight: bold;
+}
+
+.input_dan:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.input_dan {
+    width: 100% !important;
+    background-color: rgb(190, 190, 190);
+}

@@ -1,0 +1,208 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsStudentsPages
+@model ImportFileStudents
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<link rel="stylesheet" type="text/css" href="~/css/uploadFile.css?version=0.1">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                <p class="employees_title">Импорт студентов</p>
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form method="post" enctype="multipart/form-data" asp-action="ImportStudents" class="callback-from form-upload">
+                <label class="input-file">
+                    <span class="input-file-text" type="text"></span>
+                    <input asp-for="UploadedFile" type="file" id="file_input">
+                    <span class="input-file-btn">Выберите файл</span>
+                </label>
+                <span asp-validation-for="UploadedFile" style="color: red;"></span>
+                <div style="display: flex; margin-top: 10px;">
+                    <input type="submit" class="btn btn_save submit_btn" style="cursor: pointer;" href="#" value="Выполнить импорт" />
+                </div>
+                <p style="color: black; margin-left: 10px; margin-top: 10px;">Импорт возможен только с файла формата .xlsx <span onclick="exampledownload();" style="color: blue; cursor: pointer;">Скачать пример</span> </p>
+                <p style="color: black; margin-left: 10px; margin-top: 10px;">При импорте учитыватся строки начиная со второй! Первая строка (заголовки) - не учитываются. Обратите внимание, что ДАТЫ должны быть указаны в ТЕКСТОВОМ ФОРМАТЕ в Excel</p>
+            </form>
+            @if (Model.passedStudents?.Count() > 0)
+            {
+                <hr class="hr_style" size="1px" noshade>
+                <p style="color: green; font-weight: bold; margin-left: 10px; margin-top: 10px;">Успешно добавленные студенты</p>
+                <div class="table_container">
+                    <table class="table_cadri">
+                        <tr class="title_table">
+                            <th>Фамилия Имя Отчество</th>
+                            <th>Email(логин)</th>
+                            <th>Наименование группы</th>
+                            <th>Номер телефона</th>
+                            <th>Дата рождения</th>
+                        </tr>
+                        @foreach (var a in Model.passedStudents)
+                        {
+                            <tr>
+                                <td>
+                                    <p>@a.SurnameUser?.ToString() @a.NameUser?.ToString() @a.PatronymicNameUser?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@a.Email?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@a.PathImageStudent?.ToString()</p> @*ГРУППА СТУДЕНТА*@
+                                </td>
+                                <td>
+                                    <p>@a.PhoneNumber?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@a.DateOfBirthday?.ToString()</p>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            @if (Model.notPassedStudents?.Count() > 0)
+            {
+                <hr class="hr_style" size="1px" noshade>
+                <p style="color: red; font-weight: bold; margin-left: 10px; margin-top: 10px;">Не добавленные студенты</p>
+                <div class="table_container">
+                    <table class="table_cadri">
+                        <tr class="title_table">
+                            <th>Фамилия Имя Отчество</th>
+                            <th>Email(логин)</th>
+                            <th>Наименование группы</th>
+                            <th>Номер телефона</th>
+                            <th>Дата рождения</th>
+                            <th>Ошибка(и)</th>
+                        </tr>
+                        @for (int i = 0; i < Model.notPassedStudents.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    <p>@Model.notPassedStudents.ElementAt(i).SurnameUser?.ToString() @Model.notPassedStudents.ElementAt(i).NameUser?.ToString() @Model.notPassedStudents.ElementAt(i).PatronymicNameUser?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@Model.notPassedStudents.ElementAt(i).Email?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@Model.notPassedStudents.ElementAt(i).PathImageStudent?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@Model.notPassedStudents.ElementAt(i).PhoneNumber?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@Model.notPassedStudents.ElementAt(i).DateOfBirthday?.ToString()</p>
+                                </td>
+                                <td>
+                                    <p>@Model.errorsImport.ElementAt(i).Errors</p>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div> 
+            }
+            <div>
+                <hr class="hr_style" size="1px" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Students">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.IsError == true)
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">@Model.ErrorTitle!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">@Model.ErrorMessage</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}
+
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=2');
+
+    $('.input-file input[type=file]').on('change', function () {
+        let file = this.files[0];
+        if (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+            $(this).closest('.input-file').find('.input-file-text').html(file.name);
+        }
+        else{
+            alert("Недопустимый формат файла!");
+            $(this).closest('.input-file').find('.input-file-text').html("");
+            $("#file_input").val(null);
+        }
+        //alert($("#file_input").val());
+    });
+
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+
+    function exampledownload() {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        xhr.open("GET", "/Students/downloadImportExample", true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+</script>

@@ -1,0 +1,173 @@
+﻿@model PersonalAccountModels
+<link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+<link rel="stylesheet" type="text/css" href="~/css/calendar.css" />
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/custom_2.css" />
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<style>
+    .block_container{
+        color: black;
+        width: 100%;
+        padding: 20px;
+    }
+    .block_container > div > div > p{
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .block_container > div > div > p > span{
+        font-weight: normal;
+    }
+
+    .container_practice{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .container_practice > div {
+        flex: 0 0 31.333333%;
+        padding: 20px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+        border: solid 1px black;
+        border-radius: 15px;
+    }
+    @@media(max-width: 1024px){
+        .container_practice > div {
+            flex: 0 0 45.333333%;
+        }
+    }
+
+    @@media(max-width: 580px) {
+        .container_practice > div {
+            flex: 0 0 95.333333%;
+            margin-left: 0px;
+        }
+        @if(User.IsInRole("Студент")){
+            <text>
+            .flex_student{
+                display: block !important
+            }
+            .text_p_student{
+                font-size: 11px;
+            }
+            </text>
+        }
+    }
+    @if(User.IsInRole("Студент")){
+        <text>
+        .flex_student{
+            display: flex;
+        }
+        </text>
+    }
+</style>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div style="color: white;" class="left_men"></div>
+</div>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="block_container">
+    @if(User.IsInRole("Студент"))
+    {
+        <div>
+            <h1 style="margin-top: 10px; margin-bottom: 10px;">Данные о практиках</h1>
+            <div class="container_practice">
+                @foreach(var a in Model.list_practices)
+                {
+                    <div>
+                        <p style="font-weight: bold; font-style: italic; text-decoration: underline;">Информация о практике:</p>
+                        <p style="font-weight: bold; margin-top: 12px;">Наименование проф. модуля: <p>@a.NameProfModule</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Наименование практики: <p>@a.NamePractice</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Количество часов: <p>@a.Hours часов</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Статус практики: <p>@(a.IsEnded== true ? "Закончилась" : "Идёт/Будет")</p></p>
+                        <p style="font-weight: bold; margin-top: 12px;">Даты:</p>
+                        @foreach(var j in a.list_periods)
+                        {
+                            <p>@j.DaysPractice</p>
+                            @foreach(var h in j.PracticesChartDates)
+                            {
+                                <li>С @h.DateStart.ToShortDateString() по @h.DateEnd.ToShortDateString()</li>
+                            }
+                        }
+                        <p style="font-weight: bold; font-style: italic; margin-top: 18px; text-decoration: underline;">Информация об организации:</p>
+                        <p style="font-weight: bold; margin-top: 12px;">Наименование организации: <p>@a.organization.FullNameOrganization @(a.organization.NotFullNameOrganization == null ? "" : "(" + a.organization.NotFullNameOrganization + ")")</p></p>
+                        @if (a.organization.AddressOrganization != null)
+                        {
+                            <p style="font-weight: bold; margin-top: 12px;">Адрес организации: <p>@a.organization.AddressOrganization</p></p>
+                        }
+                        @if (a.organization.NameContactOfOrganization != null)
+                        {
+                            <p style="font-weight: bold; margin-top: 12px;">Руководитель организации: <p>@a.organization.SurnameContactOfOrganization @a.organization.NameContactOfOrganization @(a.organization.PatronymicContactOfOrganization == null ? "" : a.organization.PatronymicContactOfOrganization)</p></p>
+                        }
+                        @if (a.organization.PhoneNumberContactOfOrganization != null)
+                        {
+                            <p style="font-weight: bold; margin-top: 12px;">Контактный телефон: <p>@a.organization.PhoneNumberContactOfOrganization</p></p>
+                        }
+                        <div onclick="downloadDoc(@a.ID_Practice, 0);" style="margin-top:20px; font-style: italic; cursor: pointer; color: blue;">Скачать шаблон аттестационного листа практики</div>
+                        <div onclick="downloadDoc(@a.ID_Practice, 2);" style="margin-top:10px; font-style: italic; cursor: pointer; color: blue;">Скачать шаблон отчёта практики</div>
+                        <div onclick="downloadDoc(@a.ID_Practice, 1);" style="margin-top:10px; font-style: italic; cursor: pointer; color: blue;">Скачать шаблон дневника практики</div>
+                    </div>
+                }
+            </div>
+        </div>
+        <hr class="hr_style" size="1px" noshade>
+    }
+    <div style="display: flex; margin-top: 20px;">
+        <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Home">
+            <p>На главную страницу</p>
+        </a>
+    </div>
+</div>
+<script>
+    $('.left_men').load('@Url.Action("LeftMenuStudent", "Additional")?index=1');
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+
+    function downloadDoc(idPractice, type) {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        if(type == 0){
+            xhr.open("GET", "StudentDocumentsPractice/downloadAttList?idPractice="+ idPractice, true);
+        }
+        if(type == 1){
+            xhr.open("GET", "StudentDocumentsPractice/downloadDnevnik?idPractice="+ idPractice, true);
+        }
+        if(type == 2){
+            xhr.open("GET", "StudentDocumentsPractice/downloadOtchet?idPractice="+ idPractice, true);
+        }
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+</script>

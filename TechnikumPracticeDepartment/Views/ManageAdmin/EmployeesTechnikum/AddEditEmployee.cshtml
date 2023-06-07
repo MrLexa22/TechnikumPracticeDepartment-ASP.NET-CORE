@@ -1,0 +1,233 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsEmployeesPages
+@model AddEditEmployee
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_User != 0)
+                {
+                    <p class="employees_title">@Model.SurnameUser @Model.NameUser</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление сотрудника</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="Employees" asp-action="AddEditEmployeePost" asp-route-id="@Model.ID_User" method="post" class="callback-from">
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Email</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_User == 0){<text>style="display: none;"</text>} id="old_Email">@Model.Email</p>
+                                <div class="inputs_Email inputs_values" @if(Model.ID_User != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <input type="text" asp-for="ID_User" value="@Model.ID_User" />
+                                        </div>
+                                        <input asp-for="Email" type="text" class="search-field" id="input_Email" style="width: 100%;" placeholder="Email"></input>
+                                    </div>
+                                    <span asp-validation-for="Email" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_User == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Фамилия</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_User == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.SurnameUser</p>
+                                <div class="inputs_CodeBlock inputs_values" @if(Model.ID_User != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="SurnameUser" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Фамилия сотрудника"></input>
+                                    </div>
+                                    <span asp-validation-for="SurnameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_User == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Имя</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_User == 0){<text>style="display: none;"</text>} id="old_CodeName">@Model.NameUser</p>
+                                <div class="inputs_CodeName inputs_values" @if(Model.ID_User != 0){<text>style="display: none;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="NameUser" type="text" class="search-field" id="input_CodeName" style="width: 100%;" placeholder="Имя сотрудника"></input>
+                                    </div>
+                                    <span asp-validation-for="NameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_User == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeName" onclick="edit('CodeName', true);" href="#"><img id="img_edit_CodeName" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeName" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Отчество</p>
+                        <div>
+                            <div style="max-width: 350px;">
+                                <p @if(Model.ID_User == 0){<text>style="display: none;"</text>} id="old_QualificatName">@Model.PatronymicNameUser</p>
+                                <div class="inputs_QualificatName inputs_values" @if(Model.ID_User != 0){<text>style="display: none;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="PatronymicNameUser" type="text" class="search-field" id="input_QualificatName" style="width: 100%;" placeholder="Отчество сотрудника"></input>
+                                    </div>
+                                    <span asp-validation-for="PatronymicNameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_User == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_QualificatName" onclick="edit('QualificatName', true);" href="#"><img id="img_edit_QualificatName" src="~/images/edit.svg"><img style="display: none;" id="img_cross_QualificatName" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div class="block_info">
+                    <p class="block_title">Роли сотрудника</p>
+                    <table class="table_roles" style="height: fit-content;">
+                        <tr>
+                            <th>
+                                <p>Роли</p>
+                            </th>
+                            <th>
+                                <div>
+                                    <input type="checkbox" asp-for="Administrator" class="custom-checkbox child" id="group_administrator">
+                                    <label class="child_el search__element_orgped" for="group_administrator">Администратор</label>
+                                    <input type="checkbox" asp-for="Employee" class="custom-checkbox child" id="group_employee">
+                                    <label class="child_el search__element_orgped" for="group_employee">Сотрудник производственного отдела</label>
+                                </div>
+                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                    <input type="text" value="f" asp-for="rolecheck" />
+                                </div>
+                                <span asp-validation-for="rolecheck" style="color: red;"></span>
+                            </th>
+                        </tr>
+                    </table>
+                    <div style="display: flex; margin-top: 10px;">
+                        <input type="submit" class="btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                    </div>
+                </div>
+            </form>
+            @if (Model.ID_User > 0)
+            {
+                <hr class="hr_style" size="1px" noshade>
+                <div class="block_info">
+                    <p class="block_title">Статус аккаунта</p>
+                    <div style="margin-left: 10px;">
+                        @if (Model.IsAvaliable == null)
+                        {
+                            <p style="color: green; margin-bottom: 15px;">Активный</p>
+                            <a asp-action="BlockUnblockUser" asp-controller="Employees" asp-route-id="@Model.ID_User" style="color: red; border: 1px solid rgb(132, 132, 132); border-radius: 5px; padding: 6px 20px;">Заблокировать</a>
+                        }
+                        else if (Model.IsAvaliable == true)
+                        {
+                            <p style="color: green; margin-bottom: 15px;">Активный</p>
+                            <a asp-action="BlockUnblockUser" asp-controller="Employees" asp-route-id="@Model.ID_User" style="color: red; margin-top: 25px; border: 1px solid rgb(132, 132, 132); border-radius: 5px; padding: 6px 20px;">Заблокировать</a>
+                        }
+                        else if (Model.IsAvaliable == false)
+                        {
+                            <p style="color: red; margin-bottom: 15px;">Заблокирован</p>
+                            <a asp-action="BlockUnblockUser" asp-controller="Employees" asp-route-id="@Model.ID_User" style="color: green; margin-top: 25px; border: 1px solid rgb(132, 132, 132); border-radius: 5px; padding: 6px 20px;">Разблокировать</a>
+                        }
+                        <p style="margin-top: 30px;"><a asp-action="ResetPassword" asp-controller="Employees" asp-route-id="@Model.ID_User" style="color: black; margin-top: 25px; border: 1px solid rgb(132, 132, 132); border-radius: 5px; padding: 6px 20px;">Сбросить пароль</a></p>
+                    </div>
+                </div>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Employees">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=1');
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.2"></script>
+@if (ViewData["Recovery"] == "T")
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Пароль успешно сброшен!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">Письмо с новым паролем направлено пользователю на почту.</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}
+else if (ViewData["Recovery"] == "T1")
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Аккаунт успешно создан!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">Письмо с паролем для авторизации направлено пользователю на почту.</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}
+
+
+

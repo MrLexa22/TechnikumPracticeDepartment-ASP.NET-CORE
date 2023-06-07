@@ -1,0 +1,190 @@
+﻿@model PersonalAccountModels
+<link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+<link rel="stylesheet" type="text/css" href="~/css/demo.css" />
+<link rel="stylesheet" type="text/css" href="~/css/calendar.css" />
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/custom_2.css" />
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<style>
+    .block_container{
+        color: black;
+        width: 100%;
+        padding: 20px;
+    }
+    .block_container > div > div > p{
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .block_container > div > div > p > span{
+        font-weight: normal;
+    }
+
+    .container_practice{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .container_practice > div {
+        flex: 0 0 31.333333%;
+        padding: 20px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+        border: solid 1px black;
+        border-radius: 15px;
+    }
+    @@media(max-width: 1024px){
+        .container_practice > div {
+            flex: 0 0 45.333333%;
+        }
+    }
+
+    @@media(max-width: 580px) {
+        .container_practice > div {
+            flex: 0 0 95.333333%;
+            margin-left: 0px;
+        }
+        @if(User.IsInRole("Студент")){
+            <text>
+            .flex_student{
+                display: block !important
+            }
+            .text_p_student{
+                font-size: 11px;
+            }
+            </text>
+        }
+    }
+    @if(User.IsInRole("Студент")){
+        <text>
+        .flex_student{
+            display: flex;
+        }
+        </text>
+    }
+</style>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+</div>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="block_container">
+    <div @if(User.IsInRole("Студент")){<text>class="flex_student"</text>}>
+        <div>
+            <h1>Данные об аккаунте</h1>
+            <p>Фамилия: <span>@Model.SurnameUser</span></p>
+            <p>Имя: <span>@Model.NameUser</span></p>
+            <p>Отчество: <span>@Model.PatronymicnameUser?.ToString()</span></p>
+            <p>Email (логин): <span>@Model.Email</span></p>
+            @if (User.IsInRole("Администратор") || User.IsInRole("Сотрудник производственного отдела"))
+            {
+                <p>Роли: <span>@Model.roles</span></p>
+            }
+            @if (User.IsInRole("Студент"))
+            {
+                <p>Специальность: <span>[@Model.SpecializationCode] @Model.SpecializationName</span></p>
+                <p>Группа: <span>@Model.GroupName</span></p>
+                <p>Дата рождения: <span>@(Model.dateOfBirthday == null ? "не указана" : Model.dateOfBirthday)</span></p>
+                <p>Номер телефона: <span>@(Model.PhoneNumber == null ? "не указан" : Model.PhoneNumber)</span></p>
+                <div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
+                    <div onclick="updateStudentInfo();" class="btn" style="cursor: pointer; background-color: #e8c697;">
+                        <p class="text_p_student">Изменить дату рождения/номер телефона</p>
+                    </div>
+                </div>
+            }
+            <div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
+                <div onclick="updatePassword();" class="btn" style="cursor: pointer; background-color: lightblue;">
+                    <p class="text_p_student">Изменить пароль</p>
+                </div>
+            </div>
+        </div>
+        @if(User.IsInRole("Студент"))
+        {
+            <div class="second_container_edit">
+                <p style="color: rgb(103, 103, 103);font-weight: bold; margin: 10px; text-align: center;">Загруженное изображение студента</p>
+                <img style="width: 160px; height: 180px; margin: 10px; object-fit:cover;" src="@if(Model.PathImageStudent == null){ <text>https://stalstroyservis.ru/images/no_photo.png</text> }else{@Url.Action("GetImageFromServer","Additional",new {path = Model.PathImageStudent})}" />
+                @if (Model.PathImageStudent != null)
+                {
+                    <div style="margin-top:10px;"><a href="/Home/RemoveStudentImage" class="submit_btn btn btn_save" style="background-color: red; font-size: 10.5px; margin-right: 0px;">Удалить изображение</a></div>
+                    <p style="font-weight: normal; font-size: 12px; font-style: italic;">Для обновления фотографии нажмите кнопку "Удалить изображение",а затем прикрепите новое изображение</p>
+                }
+                else
+                {
+                    <div onclick="updateStudentImage();" class="submit_btn btn btn_save" style="margin-top:10px; cursor: pointer; margin-left:0; background-color: darkslateblue; font-size: 10.5px; text-align: center; margin-right: 0px;">Загрузить изображение</div>
+                }
+            </div>
+        }
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    @if (User.IsInRole("Работадатель"))
+    {
+        <div>
+            <h1>Данные об организации</h1>
+            <p style="margin-top: 15px; font-weight: bold;">Наименование организации: <span style="font-weight: normal;">@Model.info_organization.FullNameOrganization (@Model.info_organization.NotFullNameOrganization)</span></p>
+            <p style="margin-top: 10px; font-weight: bold;">Адрес организации: <span style="font-weight: normal;">@Model.info_organization.AddressOrganization</span></p>
+            <p style="margin-top: 10px; font-weight: bold;">ИНН организации: <span style="font-weight: normal;">@(Model.info_organization.InnOrganization == null ? "не указан" : Model.info_organization.InnOrganization)</span></p>
+        </div>
+    }
+    <div style="display: flex; margin-top: 20px;">
+        <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Home">
+            <p>На главную страницу</p>
+        </a>
+    </div>
+</div>
+<script>
+    function updatePassword() {
+        $.ajaxSetup({ cache: false });
+        $.get('/Home/UpdatePassword', function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+
+    function updateStudentInfo() {
+        $.ajaxSetup({ cache: false });
+        $.get('/Home/UpdateStudentProfile', function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+
+    function updateStudentImage() {
+        $.ajaxSetup({ cache: false });
+        $.get('/Home/UpdateStudentImage', function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+</script>
+@if (Model.IsUpdatesPassword == true)
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Данные успешно изменены!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">Ваши данные успешно обновлены</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}

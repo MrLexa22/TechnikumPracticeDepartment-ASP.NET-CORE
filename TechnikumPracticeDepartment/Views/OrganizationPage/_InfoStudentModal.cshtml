@@ -1,0 +1,134 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model ConcatinationStudentWithPractice
+<div class="modal-content">
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+
+        .labelForm {
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+            width: 200px;
+            margin: 10px;
+            width: 85px;
+            display: inline-block;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .obratnii-zvonok{
+            width: 80%;
+            max-width: none!important;
+        }
+
+        .info_student{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        @@media(max-width: 650px){
+            .info_student {
+                display: block;
+            }
+
+            .img_student{
+                width: 170px !important;
+                height: 190px!important;
+                margin: 0!important;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div style="display: flex; justify-content: end;">
+                    <p style="cursor: pointer; font-weight: bold; font-size: 28px;" onclick='$(".modal-content").remove();'>X</p>
+                </div>
+                <div class="title">@Model.student.User.SurnameUser @Model.student.User.NameUser @Model.student.User.PatronymicNameUser?.ToString()</div>
+                <div class="info_student">
+                    <div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Фамилия имя отчество: </p>
+                            <p>@Model.student.User.SurnameUser @Model.student.User.NameUser @Model.student.User.PatronymicNameUser?.ToString()</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Email: </p>
+                            <p>@Model.student.User.Email</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Специальность: </p>
+                            <p>[@Model.student.Group.Specialization.SpecializationCode] @Model.student.Group.Specialization.SpecializationName</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Группа: </p>
+                            <p>@Model.student.Group.NameGroup</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Дата рождения: </p>
+                            <p>@(Model.student.DateOfBirthday == null ? "не указана" : Model.student.DateOfBirthday?.ToShortDateString())</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Номер телефона: </p>
+                            <p>@(Model.student.PhoneNumber == null ? "не указан" : Model.student.PhoneNumber?.ToString())</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="color: rgb(103, 103, 103);font-weight: bold; margin: 10px; text-align: center;">Изображение студента</p>
+                        <img class="img_student" style="width: 200px; height: 220px; margin: 10px; object-fit:cover;" src="@if(Model.student.ImageStudent == null){<text>https://stalstroyservis.ru/images/no_photo.png</text>}else{@Url.Action("GetImageFromServer","Additional",new {path = Model.student.ImageStudent})}" />
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div>
+                    <p style="text-align: center; font-weight: bold; margin: 15px;">Практики</p>
+                    @foreach (var jj in Model.list_practice)
+                    {
+                        <hr class="hr_style" size="1px" noshade>
+                        <p style="font-weight: bold; margin-top:12px;">Наименование проф. модуля: <p>@jj.NameProfModule</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Наименование практики: <p>@jj.NamePractice</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Количество часов: <p>@jj.Hours</p></p>
+                        <p style="font-weight: bold; margin-top:12px;">Статус практики: <p @if(jj.IsEnded==true){<text>style="color: red;"</text>}else{<text>style="color: green;"</text>}>@(jj.IsEnded == true ? "Закончилась" : "Идёт/Будет")</p></p>
+                        <p style="font-weight: bold; margin-top: 12px;">Даты:</p>
+                        @foreach (var j in jj.list_periods)
+                        {
+                            <p>@j.DaysPractice</p>
+                            @foreach (var h in j.PracticesChartDates)
+                            {
+                                <li>С @h.DateStart.ToShortDateString() по @h.DateEnd.ToShortDateString()</li>
+                            }
+                        }
+                    }
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="submit_btn btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Закрыть</button>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
+    </div>
+</div>

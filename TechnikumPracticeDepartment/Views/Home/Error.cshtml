@@ -1,0 +1,54 @@
+﻿@model MainPageModel
+<link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+<link rel="stylesheet" type="text/css" href="~/css/demo.css" />
+<link rel="stylesheet" type="text/css" href="~/css/calendar.css?version=1" />
+<link rel="stylesheet" type="text/css" href="~/css/custom_2.css?version=2" />
+<link rel="stylesheet" type="text/css" href="~/css/errorPage.css" />
+<script type="text/javascript" src="~/js/jquery.calendario.js" defer></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+@*<div class="calendar_and_news">
+    <div class="student_block">*@
+<div style="width: 100%; overflow: hidden;">
+    <section class="wrapper" style="overflow: hidden;">
+            <div class="container">
+                <div id="scene" class="scene" data-hover-only="false">
+                    <div class="circle" data-depth="1.2"></div>
+                    <div class="one" data-depth="0.9">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+                    <div class="two" data-depth="0.60">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+                    <div class="three" data-depth="0.40">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+                    <p class="p404" data-depth="0.50">404</p>
+                    <p class="p404" data-depth="0.10">404</p>
+                </div>
+                <div class="text">
+                    <article>
+                        <p>Произошла непредвиденна ошибка!</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+</div>
+@*    </div>
+</div>*@
+<script>
+    var scene = document.getElementById('scene');
+    var parallax = new Parallax(scene);
+</script>

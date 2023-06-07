@@ -1,0 +1,131 @@
+﻿@model MainPageModel
+<link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+<link rel="stylesheet" type="text/css" href="~/css/demo.css" />
+<link rel="stylesheet" type="text/css" href="~/css/calendar.css?version=1" />
+<link rel="stylesheet" type="text/css" href="~/css/custom_2.css?version=2" />
+<script type="text/javascript" src="~/js/jquery.calendario.js" defer></script>
+<script type="text/javascript" src="~/js/main-page/mainpage.js" defer></script>
+<style>
+    @if(User.IsInRole("Студент"))
+    {
+        <text>
+            .student_block {
+                display: flex;
+            }
+            @@media(max-width: 1230px){
+                .student_block {
+                    display: flex;
+                }
+                .calendar_and_news{
+                    display: block;
+                }
+            }
+            @@media(max-width: 850px){
+                .student_block {
+                    display: block;
+                }
+            }
+        </text>
+    }
+</style>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+</div>
+<div class="calendar_and_news">
+    <div class="student_block">
+        <div>
+            <div class="container-cal">
+                <section class="main-cal">
+                    <div class="custom-calendar-wrap">
+                        <div class="title-cal">
+                            <svg class="img_calendra" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 248H128V192H48V248zM48 296V360H128V296H48zM176 296V360H272V296H176zM320 296V360H400V296H320zM400 192H320V248H400V192zM400 408H320V464H384C392.8 464 400 456.8 400 448V408zM272 408H176V464H272V408zM128 408H48V448C48 456.8 55.16 464 64 464H128V408zM272 192H176V248H272V192z" />
+                            </svg>
+                            <p class="call_text">Календарь</p>
+                        </div>
+                        <div id="custom-inner" class="custom-inner">
+                            <div class="custom-header clearfix">
+                                <nav>
+                                    <span id="custom-prev" class="custom-prev"></span>
+                                    <span id="custom-next" class="custom-next"></span>
+                                </nav>
+                                <h2 id="custom-month" class="custom-month"></h2>
+                                <h3 id="custom-year" class="custom-year"></h3>
+                            </div>
+                            <div id="calendar" class="fc-calendar-container"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        @if(User.IsInRole("Студент"))
+        {
+            <div class="block_news">
+                <div class="title-cal title-news">
+                    <svg class="img_calendra img_news" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <path d="M25.57 176.1C12.41 175.4 .9117 185.2 .0523 198.4s9.173 24.65 22.39 25.5c120.1 7.875 225.7 112.7 233.6 233.6C256.9 470.3 267.4 480 279.1 480c.5313 0 1.062-.0313 1.594-.0625c13.22-.8438 23.25-12.28 22.39-25.5C294.6 310.3 169.7 185.4 25.57 176.1zM32 32C14.33 32 0 46.31 0 64s14.33 32 32 32c194.1 0 352 157.9 352 352c0 17.69 14.33 32 32 32s32-14.31 32-32C448 218.6 261.4 32 32 32zM63.1 351.9C28.63 351.9 0 380.6 0 416s28.63 64 63.1 64s64.08-28.62 64.08-64S99.37 351.9 63.1 351.9z" />
+                    </svg>
+                    <p class="call_text">Практики</p>
+                </div>
+                <div class="news_block">
+                    @foreach (var p in Model.list_practices)
+                    {
+                        <div class="news_sbornik">
+                            <div class="news">
+                                <p style="font-weight: bold; text-align: center;">@p.NamePractice</p>
+                                <p><span style="font-weight: bold;">Часов:</span> @p.Hours</p>
+                                <p><span style="font-weight: bold;">Статус:</span> @if (p.IsEnded == true) { <span style="color: red;">Закончилась</span>}else{<span style="color: green;">Идёт/Будет</span>}</p>
+                                <p><span style="font-weight: bold;">Период:</span>
+                                    @foreach (var j in p.list_periods)
+                                    {
+                                        <p style="font-style: italic; margin-left: 15px;">@j.DaysPractice</p>
+                                        @foreach (var h in j.PracticesChartDates)
+                                        {
+                                        <li style="margin-left: 30px;">С @h.DateStart.ToShortDateString() по @h.DateEnd.ToShortDateString()</li>
+                                        }
+                                    }
+                                </p>
+                                <p><span style="font-weight: bold;">База практики:</span> @p.organization.FullNameOrganization</p>
+                                <hr class="news_hr" size="1px" noshade>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <a asp-controller="StudentDocumentsPractice" asp-action="Index">
+                    <div class="btn_moreNews">
+                        <p>Подробнее</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+    <div class="block_news">
+        <div class="title-cal title-news">
+            <svg class="img_calendra img_news" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path d="M25.57 176.1C12.41 175.4 .9117 185.2 .0523 198.4s9.173 24.65 22.39 25.5c120.1 7.875 225.7 112.7 233.6 233.6C256.9 470.3 267.4 480 279.1 480c.5313 0 1.062-.0313 1.594-.0625c13.22-.8438 23.25-12.28 22.39-25.5C294.6 310.3 169.7 185.4 25.57 176.1zM32 32C14.33 32 0 46.31 0 64s14.33 32 32 32c194.1 0 352 157.9 352 352c0 17.69 14.33 32 32 32s32-14.31 32-32C448 218.6 261.4 32 32 32zM63.1 351.9C28.63 351.9 0 380.6 0 416s28.63 64 63.1 64s64.08-28.62 64.08-64S99.37 351.9 63.1 351.9z" />
+            </svg>
+            <p class="call_text">Новости университета</p>
+        </div>
+        <div class="news_block">
+            @foreach(var p in Model.list_newsUniversity)
+            {
+                <div class="news_sbornik">
+                    <a target="_blank" href="@p.hrefs">
+                        <div class="news">
+                            <p class="news_date">@p.Date</p>
+                            <p>@p.title</p>
+                            <hr class="news_hr" size="1px" noshade>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+        <a target="_blank" href="https://new2.rea.ru/news">
+            <div class="btn_moreNews">
+                <p>Больше новостей</p>
+            </div>
+        </a>
+    </div>
+</div>

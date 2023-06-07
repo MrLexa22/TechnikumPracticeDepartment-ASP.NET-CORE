@@ -1,0 +1,83 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model VacancyModels
+@addTagHelper *, TechnikumPracticeDepartment
+<style>
+    .vacancy_item{
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 12px #edeff0;
+        justify-content: normal;
+        border: 1px solid transparent;
+        position: relative;
+        margin-bottom: 16px;
+        display: flex;
+        transition: height 1s ease-in,padding-bottom .1s,padding-top .1s;
+    }
+
+    .description_vacancy {
+        position: relative;
+        width: 100%;
+    }
+
+    .title_vacancy{
+        margin: 0;
+        padding: 0;
+        font-size: 18px;
+        line-height: 1.1;
+        font-weight: 700;
+    }
+
+    .tag{
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+</style>
+<div>
+    <div class="table_container" style="position: relative;">
+        <div style="margin-bottom: 80px;">
+            @foreach(var a in Model.list_vacancy)
+            {
+                <div class="vacancy_item">
+                    <div class="description_vacancy">
+                        <div style="width: fit-content;"><a asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@a.IdVacancy" style="width: fit-content; color: #3c9df2;"><h3 class="title_vacancy">@a.NameVacancy</h3></a></div>
+                        <p style="margin-top: 8px;">@a.Organization.NotFullNameOrganization</p>
+                        <p style="margin-top: 8px;">@a.Organization.AddressOrganization</p>
+                        @if (User.IsInRole("Работадатель"))
+                        {
+                            <p style="margin-top: 8px;">Откликов студентов (без ответа): @a.ResponseFromStudents.Where(p=>p.Status == 0 || p.Status == 2).Count().ToString()</p>
+                            <p style="margin-top: 8px;">Откликов организации (без ответа): @a.ResponseFromOrganizations.Where(p=>p.Status == 0 || p.Status == 2).Count().ToString()</p>
+                        }
+                        <div style="margin-top: 8px;">
+                            @foreach(var j in a.TagsSkills.Split(";"))
+                            {
+                                <span class="tag">@j</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+        <page-link page-model="Model.PageViewModel" page-action="GetList"
+                   page-url-filterTags="@(Model.FilterViewModel.FilterTags)"
+                   page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+    </div>
+</div>

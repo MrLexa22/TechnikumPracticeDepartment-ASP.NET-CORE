@@ -1,0 +1,57 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsStudentsPages
+@model IndexStudentsModel
+@addTagHelper *, TechnikumPracticeDepartment
+<div class="table_container">
+    <table class="table_cadri">
+        <tr class="title_table">
+            <th>Фамилия Имя Отчество</th>
+            <th>Логин (email)</th>
+            <th>Группа (курс)</th>
+            <th>Резюме</th>
+            <th></th>
+        </tr>
+        @foreach (var a in Model.list_students)
+        {
+            <tr>
+                <td>
+                    <p class="point_to">
+                        <a asp-action="AddEditStudent" asp-controller="Students" asp-route-id="@a.student.IdStudent">
+                            @a.student.User.SurnameUser @a.student.User.NameUser @a.student.User.PatronymicNameUser?.ToString()
+                        </a>
+                    </p>
+                    @if (a.student.IsStudent == false){<p style="color: red;">Отчислен/Академический отпуск</p>}
+                </td>
+                <td>
+                    <p>@a.student.User.Email</p>
+                </td>
+                <td>
+                    <p>@a.NameGroups [@a.SpecializationName] (@a.Course.ToString() курс)</p>
+                    @if (a.IsEnded == true){<p style="color: red;">Обучение группы завершено</p>}
+                </td>
+                <td>
+                    @if (a.student.Resume == null)
+                    {
+                        <p style="color: red;">Нету</p>
+                    }
+                    @if (a.student.Resume != null)
+                    {
+                        <p style="color: green;">Указано</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="AddEditStudent" asp-controller="Students" asp-route-id="@a.student.IdStudent">
+                        <img style="max-width: 30px;" src="~/images/edit.png">
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-typeSortListStudents="@(Model.FilterViewModel.TypeSortListStudents)"
+               page-url-filterListStudentsByGroup="@(Model.FilterViewModel.FilterListStudentsByGroup)"
+               page-url-filterListStudentsByCourse="@(Model.FilterViewModel.FilterListStudentsByCourse)"
+               page-url-filterListStudentsByAvaliable="@(Model.FilterViewModel.FilterListStudentsByAvaliable)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

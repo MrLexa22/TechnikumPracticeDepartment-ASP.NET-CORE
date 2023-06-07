@@ -1,0 +1,244 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model ConcatinationStudentWithPractice
+<div class="modal-content">
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+        .info_block{
+            width: 95%!important;
+        }
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+
+        .labelForm {
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+            width: 200px;
+            margin: 10px;
+            width: 85px;
+            display: inline-block;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .obratnii-zvonok{
+            width: 80%;
+            max-width: none!important;
+        }
+
+        .info_student{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        @@media(max-width: 650px){
+            .info_student {
+                display: block;
+            }
+
+            .img_student{
+                width: 170px !important;
+                height: 190px!important;
+                margin: 0!important;
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            position: relative;
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            padding: 0 11px;
+            text-align: left;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            background-color: #edeff0;
+            color: #303233;
+            height: 32px;
+            line-height: 30px;
+            border: 1px solid transparent;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div style="display: flex; justify-content: end;">
+                    <p style="cursor: pointer; font-weight: bold; font-size: 28px;" onclick='$(".modal-content").remove();'>X</p>
+                </div>
+                <div class="title">@Model.students.student.User.SurnameUser @Model.students.student.User.NameUser @Model.students.student.User.PatronymicNameUser?.ToString()</div>
+                <div class="info_student">
+                    <div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Фамилия имя отчество: </p>
+                            <p>@Model.students.student.User.SurnameUser @Model.students.student.User.NameUser @Model.students.student.User.PatronymicNameUser?.ToString()</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Email: </p>
+                            <p>@Model.students.student.User.Email</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Специальность: </p>
+                            <p>[@Model.students.student.Group.Specialization.SpecializationCode] @Model.students.student.Group.Specialization.SpecializationName</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Группа: </p>
+                            <p>@Model.students.student.Group.NameGroup</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Дата рождения: </p>
+                            <p>@(Model.students.student.DateOfBirthday == null ? "не указана" : Model.students.student.DateOfBirthday?.ToShortDateString())</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Номер телефона: </p>
+                            <p>@(Model.students.student.PhoneNumber == null ? "не указан" : Model.students.student.PhoneNumber?.ToString())</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="color: rgb(103, 103, 103);font-weight: bold; margin: 10px; text-align: center;">Изображение студента</p>
+                        <div style="text-align: center;"><img class="img_student" style="width: 200px; height: 220px; margin: 10px; object-fit:cover;" src="@if(Model.students.student.ImageStudent == null){<text>https://stalstroyservis.ru/images/no_photo.png</text>}else{@Url.Action("GetImageFromServer","Additional",new {path = Model.students.student.ImageStudent})}" /></div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div сlass="info_block">
+                    <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Отклик:</h3>
+                    <p style="margin-bottom: 5px;"><span style="font-weight: bold; margin-bottom: 5px;">Вакансия:</span> @Model.response.Vacancy.NameVacancy</p>
+                    <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Текущий статус:</span> @(Model.response.Status == 0 ? "создан" : (Model.response.Status == 1 ? "на рассмотрении (ожидание ответа студента)" : (Model.response.Status == 2 ? "на рассмотрении (получен ответ студента)" : (Model.response.Status == 3 ? "принят (на рассмотрении ОУ)" : (Model.response.Status == 4 ? "принят" : (Model.response.Status == 5 ? "отказ организации" : "отказ ОУ"))))))</p>
+                    <p style="margin-bottom: 5px;"><span style="font-weight: bold; margin-bottom: 5px;">Дата и время отклика:</span> @Model.response.DateTimeCreate.ToShortDateString() @Model.response.DateTimeCreate.ToShortTimeString()</p>
+                    <p><span style="font-weight: bold;">Комментарий студента:</span></p>
+                    <p>@Html.Raw(Model.response.CommentStudent?.Replace(Environment.NewLine, "<br/>"))</p>
+                    <p style="margin-top: 5px;"><span style="font-weight: bold; margin-top: 5px;">Комментарий организации:</span></p>
+                    @if (Model.response.Status == 0 || Model.response.Status == 1 || Model.response.Status == 2)
+                    {
+                        <form asp-action="EditStatus" asp-controller="ManageVacancy" asp-route-typeResponse="@Model.typeResponse" asp-route-id="@Model.response.IdResponse" method="post" class="callback-from" enctype="multipart/form-data">
+                            <textarea asp-for="response.CommentOrganization" class="textarea_input" style="resize: none;" placeholder="Комментарий от организации (вы можете запросить дополнительную информацию или указать причины отказа)"></textarea>
+                            @if (Model.typeResponse == 1)
+                            {
+                                <p style="font-weight: bold; line-height: 2.3; margin-right: 15px; margin-top: 5px;">Статус: </p>
+                                <div style="max-width: 280px;">
+                                    <select asp-for="response.Status" style="width: 100%;" class="select_option">
+                                        <option value="1">На рассмотрении организацией (ожидание ответа студента)</option>
+                                        <option value="3">Принят</option>
+                                        <option value="5">Отказ</option>
+                                    </select>
+                                </div>
+                            }
+                        </form>
+                        <div style="margin-top: 15px;">
+                            <input class="btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" id="subbtnff" type="button" value="Изменить" />
+                        </div>
+                        @if (Model.typeResponse == 2)
+                        {
+                            <div style="text-align: center; margin-top: 15px;">
+                                <div style="width: fit-content;"><a asp-action="DeleteResponse" asp-controller="ManageVacancy" asp-route-idResponse="@Model.response.IdResponse" asp-route-fromDelete="@Model.fromDeletet" class="btn btn_save" style="background-color: orangered; margin: 0; color: white; cursor: pointer;">Удалить отклик</a></div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>@Html.Raw(Model.response.CommentOrganization?.Replace(Environment.NewLine, "<br/>"))</p>
+                    }
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div>
+                    <div class="info_block">
+                        <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Образование:</h3>
+                        <p><span>Наименование образовательного учреждения:</span> ФГБОУ ВО «РЭУ им. Г. В. Плеханова»</p>
+                        <p><span>Уровень образования:</span> СПО (средне-профессионально образование)</p>
+                        <p><span>Специальность:</span> @Model.students.student.Group.Specialization.SpecializationName</p>
+                        <p><span>Квалификация:</span> @Model.students.student.Group.Specialization.NameQualification</p>
+                        <p><span>Год начала обучения:</span> @Model.students.student.Group.YearStartEducation.ToString() год</p>
+                        <p><span>Год выпуска:</span> @Model.students.student.Group.YearOfGraduation.ToString() год</p>
+                        <p><span>Курс обучения:</span> @Model.students.Course курс</p>
+                        <p style="margin-top: 15px;"><span>Дополнительные сведения об образовании:</span></p>
+                        <p>@Html.Raw(Model.students.student.Resume.Education.Replace(Environment.NewLine, "<br/>"))</p>
+                    </div>
+                    <hr class="hr_style" size="1px" noshade>
+                    <div class="info_block">
+                        <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Резюме:</h3>
+                        <p><span>Желаемая должность:</span> @Model.students.student.Resume.DesiredPosition</p>
+                        <p style="margin-top: 15px;"><span>О себе:</span></p>
+                        <p>@Html.Raw(Model.students.student.Resume.AboutStudent.Replace(Environment.NewLine, "<br/>"))</p>
+                        <p style="margin-top: 15px;"><span>Опыт работы (прохождения практик):</span></p>
+                        <p>@Html.Raw(Model.students.student.Resume.WorkExperience.Replace(Environment.NewLine, "<br/>"))</p>
+                        <p style="margin-top: 15px;"><span>Профессиональные навыки:</span></p>
+                        <p>@Html.Raw(Model.students.student.Resume.ProfessionalSkills.Replace(Environment.NewLine, "<br/>"))</p>
+                        <p style="margin-top: 15px;"><span>Дополнительная информация:</span></p>
+                        <p>@Html.Raw(Model.students.student.Resume.AdditionalInformation.Replace(Environment.NewLine, "<br/>"))</p>
+                        <p style="margin-top: 15px;"><span>Ключевые навыки:</span></p>
+                        <p>
+                            @foreach (var a in Model.students.student.Resume.TagsSkills.Split(";"))
+                            {
+                                <span class="tag">@a</span>
+                            }
+                        </p>
+                        @if (Model.students.student.Resume.FileWithResume != null)
+                        {
+                            <p style="margin-top: 15px;"><span>Файл с резюме (pdf):</span></p>
+                            <div style="margin-top: 10px;"><a target="_blank" style="color: blue;" href="@Url.Action("GetPDFFromServer","Additional", new {path = Model.students.student.Resume.FileWithResume})">Открыть PDF-файл</a></div>
+                        }
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Закрыть</button>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
+        <script>
+            $(document).ready(function () {
+                $('.select_option').selectize();
+            });
+
+            $("#subbtnff").click(function (e) {
+                var placeholderElement = $('.modal');
+                var form = $(this).parents('.modal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = form.serialize();
+
+                $.post(actionUrl, dataToSend).done(function (data) {
+                    $.ajaxSetup({ cache: false });
+                    $.get('/ManageVacancy/InfoResponse?IdStudent=' + @Model.students.student.IdStudent + '&IdVacancy=' + @Model.response.VacancyId + '&typeResponse=@Model.typeResponse', function (data) {
+                        $(".modal-content").remove();
+                        $('#dialogContent').html(data);
+                        $('#modDialog').show();
+                        alert("Статус отклика обновлён!");
+                        var filter = document.querySelector('input[name="contact"]:checked').value;
+                        var url = '@Url.Action("GetListResponses", "ManageVacancy")?id=@Model.response.VacancyId&filterList=' + document.getElementById("filterList").value + '&search=' + document.getElementById("input_search").value + '&filter=' + filter;
+                        $('#listResponses').load(url);
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>

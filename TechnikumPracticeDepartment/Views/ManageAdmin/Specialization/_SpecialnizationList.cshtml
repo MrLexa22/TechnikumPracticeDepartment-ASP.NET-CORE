@@ -1,0 +1,67 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsSpecializationPages
+@model IndexSpecializationModel
+@addTagHelper *, TechnikumPracticeDepartment
+<div class="table_container">
+    <table class="table_cadri">
+        <tr class="title_table">
+            <th>Код</th>
+            <th>Наименование</th>
+            <th>Группы</th>
+            <th></th>
+        </tr>
+        @foreach(var a in Model.list_specialnosti)
+        {
+            <tr>
+                <td>
+                    <p>@a.SpecializationCode</p>
+                </td>
+                <td style="max-width: 250px;">
+                    
+                        <p class="point_to">
+                        <a asp-action="AddEditSpecialization" asp-controller="Specialization" asp-route-id="@a.IdSpecialization">
+                                @a.SpecializationName <br>(Квалификация: @a.NameQualification)
+                            </a>
+                        </p>
+                </td>
+                <td>
+                    @if (a.Groups.Count() > 0)
+                    {
+                        <input type="checkbox" class="read-more-state" id="post-@a.IdSpecialization.ToString()" />
+
+                        <ul class="read-more-wrap">
+                            @for (int j = 0; j < a.Groups.Count(); j++)
+                            {
+                                @if (j < 4)
+                                {
+                                    <li>@a.Groups.ElementAt(j).NameGroup</li>
+                                }
+                                else
+                                {
+                                <li class="read-more-target">@a.Groups.ElementAt(j).NameGroup</li>
+                                }
+                            }
+                        </ul>
+                        @if (a.Groups.Count() > 4)
+                        {
+                            <label for="post-@a.IdSpecialization.ToString()" class="read-more-trigger"></label>
+                        }
+                    }
+                    else
+                    {
+                        <p>Нет групп</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="AddEditSpecialization" asp-controller="Specialization" asp-route-id="@a.IdSpecialization">
+                        <img style="max-width: 30px;" src="~/images/edit.png">
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-typeSortListSpecialization="@(Model.FilterViewModel.TypeSortListSpecialization)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

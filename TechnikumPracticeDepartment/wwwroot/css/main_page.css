@@ -1,0 +1,73 @@
+.img_calendra {
+    width: 5%;
+    margin-left: 8px;
+    fill: white;
+}
+
+.call_text {
+    margin-left: 5px;
+    font-size: 16px;
+    padding-top: 2px;
+}
+
+.block_news {
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 0 30px 50px 30px;
+    max-width: 400px;
+}
+
+.title-news {
+    padding-bottom: 5px;
+}
+
+.img_news {
+    width: 3%;
+}
+
+.news_block {
+    background-color: white;
+    overflow: auto;
+    max-height: 420px;
+}
+
+.news {
+    font-size: 14px;
+    color: black;
+    padding: 15px;
+    padding-bottom: 0px;
+}
+
+.news_date {
+    margin-bottom: 5px;
+    color: #999999;
+}
+
+.news_hr {
+    color: #999999;
+    margin-top: 5px;
+}
+
+.btn_moreNews {
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    background: #b5b5b5;
+}
+
+.news_sbornik {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.calendar_and_news {
+    display: flex;
+}
+
+@media (max-width: 1023px) {
+    .calendar_and_news {
+        display: block;
+        width: 100%;
+    }
+}

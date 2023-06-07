@@ -1,0 +1,9 @@
+﻿@model int
+<ul class="left_men_ul">
+    <li @if(Model == 1) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="Practice">Практики</a></li>
+    <li @if(Model == 2) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="PracticeChart">График практик</a></li>
+    <li @if(Model == 3) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="PracticeDistribution">Распределение студентов</a></li>
+    <li @if(Model == 4) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="ManageResponses">Заявки</a></li>
+    <li @if(Model == 5) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="ManageVacancy">Вакансии</a></li>
+    <li @if(Model == 6) {<text>class="actived"</text>}><a asp-action="Index" asp-controller="ResumeStudents">Резюме студентов</a></li>
+</ul>

@@ -1,0 +1,148 @@
+﻿<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Сотрудники техникума</p>
+        <div class="search" style="max-height: 35px; width: 50%;">
+            <input oninput="change()" id="input_search" type="text" class="search-field" placeholder="Введите фамилию имя / email для поиска">
+            <img src="images/search.svg" alt="" class="search-icon">
+        </div>
+        <div>
+            <a class="btn_add edus" asp-controller="Employees" asp-action="AddEditEmployee">
+                <div class="btn_add_text"><img src="images/plus.svg" style="width: 15px; height: 15px; vertical-align: middle;"></img> Добавить сотрудника</div>
+            </a>
+        </div>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel"></div>
+        </div>
+        <div class="filter_main_panel">
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Фильтры</p>
+                </div>
+                <div class="select_filter">
+                    <p>Сортировать по</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="sortListUsers">
+                            <option value="0">Умолчанию</option>
+                            <option value="1">Фамилии имени отчеству</option>
+                            <option value="2">Email</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по роли</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="filterListUsersByRole">
+                            <option value="0">Любая</option>
+                            <option value="1">Администратор</option>
+                            <option value="2">Сотрудник произв. отдела</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="select_filter">
+                    <p>Фильтрация по доступности</p>
+                    <div>
+                        <select class="select_option" onchange="change()" id="filterListUsersByActivate">
+                            <option value="1">Активные</option>
+                            <option value="2">Заблокированные</option>
+                            <option value="3">Все</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Экспорт</p>
+                </div>
+                <div class="select_filter">
+                    <a class="btn_add edus" onclick="exp(1);" style="cursor: pointer">
+                        <div class="btn_add_text">Экспорт в CSV по фильтрам</div>
+                    </a>
+                </div>
+                <div class="select_filter">
+                    <a class="btn_add edus" onclick="exp(2);" style="cursor: pointer">
+                        <div class="btn_add_text">Экспорт в XLSX по фильтрам</div>
+                    </a>
+                </div>
+            </div>
+            <div class="filters">
+                <div class="title_clear">
+                    <p class="title_filt">Импорт</p>
+                </div>
+                <div class="select_filter">
+                    <a class="btn_add edus" asp-action="ImportEmployees" style="cursor: pointer">
+                        <div class="btn_add_text">Импорт в XSLS</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    let timer;
+    var url = '@Url.Action("GetList", "Employees")?activate=' + document.getElementById("filterListUsersByActivate").value;
+    $('#panel').load(url);
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=1');
+    function searchWithFilter() {
+        var url = '@Url.Action("GetList", "Employees")?search=' + document.getElementById("input_search").value + '&typeSortListEmployees=' + document.getElementById("sortListUsers").value + '&role=' + document.getElementById("filterListUsersByRole").value + '&activate=' + document.getElementById("filterListUsersByActivate").value;
+        $('#panel').load(url);
+    }
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+    function change() {
+        clearTimeout(timer);
+        timer = setTimeout(searchWithFilter, 1000);
+    }
+
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+
+    function exp(format) {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        xhr.open("GET", "Employees/downloadExportEmployees?format=" + format + "&role=" + document.getElementById("filterListUsersByRole").value + "&activate=" + document.getElementById("filterListUsersByActivate").value, true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>

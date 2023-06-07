@@ -1,0 +1,396 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsManageResponses
+@model ResponseDistributionFromStudent
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<style>
+    .info_student > div > p {
+        margin-bottom: 10px;
+    }
+
+    .information_div > div > div {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .main_panel {
+        padding: 0 !important;
+    }
+
+    .info_student > div > h3 {
+        margin-bottom: 15px;
+    }
+
+    .info_student > div > p > span {
+        font-weight: bold;
+    }
+
+    .info_student {
+        display: flex;
+    }
+
+        .info_student > div {
+            width: 50%;
+        }
+
+    .info_block > p > span {
+        font-weight: bold;
+    }
+
+    .info_block > p {
+        margin-bottom: 10px;
+        word-wrap: break-word;
+    }
+
+    .info_block {
+        width: 70%;
+    }
+
+    .textarea_input {
+        width: 500px;
+        height: 200px;
+        padding: 10px;
+        font-family: 'Raleway', Calibri, Arial, sans-serif;
+        color: black;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        color: black;
+    }
+
+    .pdf_block {
+        width: 90%;
+        height: 678px;
+    }
+
+    .tag {
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+
+    @@media(max-width:550px) {
+        .info_student {
+            display: block !important;
+        }
+
+        .info_block {
+            width: 90%;
+        }
+
+        .info_student > div {
+            width: 90%;
+        }
+
+        .textarea_input {
+            width: 90%;
+            height: 200px;
+            padding: 10px;
+            font-family: 'Raleway', Calibri, Arial, sans-serif;
+            color: black;
+        }
+
+        .input_dan {
+            width: 90% !important;
+        }
+
+        .tags_input {
+            width: 90% !important;
+        }
+
+        .select2-container {
+            width: 90% !important;
+        }
+
+        .pdf_block {
+            width: 90% !important;
+            height: 678px;
+        }
+    }
+</style>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">Запрос на распределение по договору</p>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div id="panel">
+                <h3>Информация о текущем запросе</h3>
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Статус запроса:</p>
+                        <div>
+                            <p>
+                                @if (Model.StatusReuqest == 0)
+                                {
+                                    <text>Создано. На проверке у сотрудника отдела производтсвенного обучения</text>
+                                }
+                                @if (Model.StatusReuqest == 1)
+                                {
+                                    <text>Принятно. Ожидание подписания документов</text>
+                                }
+                                @if (Model.StatusReuqest == 2)
+                                {
+                                    <text>Принятно. Документы подписаны</text>
+                                }
+                                @if (Model.StatusReuqest == 3)
+                                {
+                                    <text>Отказано. Обратитесь в отдел производтсвенного обучения для получения разъяснений</text>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Проверил запрос сотрудник:</p>
+                        <div>
+                            <p>
+                                @if (Model.EmployeeOfTechnikum != null)
+                                {
+                                    <text>@Model.EmployeeOfTechnikum.SurnameUser @Model.EmployeeOfTechnikum.NameUser @Model.EmployeeOfTechnikum.PatronymicNameUser?.ToString()</text>
+                                }
+                                else
+                                {
+                                    <text>-</text>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Договор:</p>
+                        <div>
+                            <p>
+                                @if (Model.StatusReuqest == 0)
+                                {
+                                    <text>В настоящее время студент не может скачать договор. После проверки запроса и подтверждения он сможет скачать договор и принести его в отдел производтсвенного обучения.</text>
+                                }
+                                @if (Model.StatusReuqest == 3)
+                                {
+                                    <text>Отказано студенту в распределении.</text>
+                                }
+                                else if (Model.StatusReuqest == 1 || Model.StatusReuqest == 2)
+                                {
+                                    <text>Студент может скачать и распечатать договор.</text>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Студент:</p>
+                        <div>
+                            <p>@Model.request.Student.User.SurnameUser @Model.request.Student.User.NameUser @Model.request.Student.User.PatronymicNameUser?.ToString() (@Model.request.Student.User.Email)</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Группа:</p>
+                        <div>
+                            <p>@Model.request.Student.Group.NameGroup</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Дополнительные ссылки:</p>
+                        <div>
+                            <div style="width: fit-content; margin-bottom: 8px;"><a asp-action="AddEditStudent" asp-controller="Students" asp-route-id="@Model.request.StudentId" style="color: blue;" target="_blank">Профиль студента</a></div>
+                            <div style="width: fit-content; margin-bottom: 8px;"><a asp-action="ResumeStudent" asp-controller="Students" asp-route-id="@Model.request.StudentId" style="color: blue;" target="_blank">Резюме студента</a></div>
+                            <div style="width: fit-content;"><a asp-action="DistributionStudentsPage" asp-controller="PracticeDistribution" asp-route-ID_Group="@Model.request.Student.GroupId" style="color: blue;" target="_blank">Распределение студента (по группе)</a></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Изменение статуса:</p>
+                        @if (Model.StatusReuqest == 0 || Model.StatusReuqest == 1)
+                        {
+                            @if (Model.StatusReuqest == 0 && Model.list_practice != null && Model.list_practice.Count() > 0)
+                            {
+                                <div style="width: fit-content!important;">
+                                    <a style="background-color: green;" class="btn_add edus" asp-controller="ManageResponses" asp-route-id="@Model.IdRequest" asp-action="ChangeStatusRequest">
+                                        <div class="btn_add_text">Принять заявку</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Model.StatusReuqest == 1 && Model.list_practice != null && Model.list_practice.Count() > 0)
+                            {
+                                <div style="width: fit-content!important;">
+                                    <a style="background-color: green;" class="btn_add edus" asp-controller="ManageResponses" asp-route-id="@Model.IdRequest" asp-action="ChangeStatusRequestDistribution">
+                                        <div class="btn_add_text">Распределить студента (только активные практики)</div>
+                                    </a>
+                                </div>
+                            }
+                            @if (Model.list_practice == null || Model.list_practice.Count() <= 0)
+                            {
+                                <div style="width: fit-content!important;">
+                                    <p>Нет активных практик для принятия решения о распределении.</p>
+                                </div>
+                            }
+                            <div style="width: fit-content!important;">
+                                <a style="background-color: red;" class="btn_add edus" asp-controller="ManageResponses" asp-route-id="@Model.IdRequest" asp-action="DiscardRequest">
+                                    <div class="btn_add_text">Отклонить заявку</div>
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="width: fit-content!important;">
+                                <p>Заявка закрыта</p>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <p>Практики, на которые будет распределён студент:</p>
+                        <div>
+                            @foreach (var a in Model.list_practice)
+                            {
+                                <div style="margin-bottom: 10px;">
+                                    <p>@a.NamePractice</p>
+                                    @foreach (var j in a.list_dates)
+                                    {
+                                        <p>С @j.DateStart.ToShortDateString() по @j.DateEnd.ToShortDateString()</p>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <h3>Проверка существования организации в системе (по ИНН, наименованию организации)</h3>
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Организация</p>
+                        <div>
+                            <p>@if (Model.isExist == false) { <text>Организация не существует в системе. После подтверждения организация будет добавлена в систему, а студент распределён в неё</text> } else{ <text>Организация уже существует в системе: @Model.existOrganization.NotFullNameOrganization @(Model.existOrganization.InnOrganization). Студент будет распределён в данную организацию</text> }</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <h3>Текущий запрос на распределение</h3>
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>ИНН организации</p>
+                        <div>
+                            <p>@Model.InnOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Полное наименование организации</p>
+                        <div>
+                            <p>@Model.FullNameOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Сокращённое наименование организации</p>
+                        <div>
+                            <p>@Model.NotFullNameOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Адрес организации</p>
+                        <div>
+                            <p>@Model.AddressOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Фамилия руководителя организации</p>
+                        <div>
+                            <p>@Model.SurnameContactNameOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Имя руководителя организации</p>
+                        <div>
+                            <p>@Model.NameContactNameOrganization</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Отчество руководителя организации</p>
+                        <div>
+                            <p>@Model.PatronymicNameContactNameOrganization?.ToString()</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Email руководителя организации</p>
+                        <div>
+                            <p>@Model.Email</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Номер телефона руководителя организации</p>
+                        <div>
+                            <p>@Model.PhoneNumber</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=4');
+    function loadEnd(e) {
+        AmagiLoader.hide();
+    }
+    function loadStart(e) {
+        AmagiLoader.show();
+    }
+    function exp() {
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener("loadend", loadEnd, false);
+        xhr.addEventListener("loadstart", loadStart, false);
+        var whatexport = $('select[name="whatexport"]').val();
+        var typeexport = $('select[name="typeexport"]').val();
+        xhr.open("GET", "/StudentsResponses/downloadDogovor", true);
+        xhr.responseType = "blob";
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = this.response;
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var a = document.createElement('a');
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.dispatchEvent(new MouseEvent('click'));
+            }
+        }
+        xhr.send();
+    };
+    @if (Model.IdRequest == 0)
+    {
+        <text>$("#input_PhoneNumber").mask('+7(999)999-99-99'); </text>
+    }
+</script>
+<script type="text/javascript" src="~/js/select.js"></script>

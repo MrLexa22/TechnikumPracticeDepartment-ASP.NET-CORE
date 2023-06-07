@@ -1,0 +1,152 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationsPages
+@model AddEditOrganizationAccount
+<div class="modal-content">
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+        .labelForm{
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+            width: 200px;
+            margin: 10px;
+            width: 85px;
+            display: inline-block;
+        }
+        .title{
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div class="title">@if (Model.ID_User == 0) { <text>Добавление</text>} else{<text>Изменение</text>} пользователя организации</div>
+                <form asp-action="AddEditAccountOrganizationPost" asp-controller="Organizations" asp-route-idUser="@Model.ID_User" asp-route-idOrganization="@Model.ID_Organization" method="post" class="callback-from" enctype="multipart/form-data">
+                    <div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.SurnameUser">Фамилия</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <input asp-for="SurnameUser" type="text" class="search-field" id="surname_inp" style="width: 100%;" placeholder="Фамилия"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.SurnameUser" style="color: red;"></span></div>
+                        </div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.NameUser">Имя</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <input asp-for="NameUser" type="text" class="search-field" id="name_inp" style="width: 100%;" placeholder="Имя"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.NameUser" style="color: red;"></span></div>
+                        </div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.PatronymicNameUser">Отчество</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <input asp-for="PatronymicNameUser" type="text" class="search-field" id="patronymic_inp" style="width: 100%;" placeholder="Отчество"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.PatronymicNameUser" style="color: red;"></span></div>
+                        </div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.Email">Email</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                    <input type="text" asp-for="ID_User" value="@Model.ID_User" />
+                                </div>
+                                <input asp-for="Email" type="text" class="search-field" style="width: 100%;" placeholder="Email"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.Email" style="color: red;"></span></div>
+                        </div>
+                        @if (Model.ID_User == 0)
+                        {
+                            <div class="form-zap">
+                                <div class="checkboxes_element">
+                                    <input type="checkbox" asp-for="@Model.SendEmail" checked class="custom-checkbox child" id="group_1">
+                                    <label class="search__element_orgped" style="margin-left: 10px;" for="group_1">Отправить письмо на почту с данными для авторизации</label>
+                                    <div></div>
+                                </div>
+                            </div>
+                            @if (Model.IsContact == true)
+                            {
+                                <div class="form-zap" style="margin-top: 10px;">
+                                    <div class="checkboxes_element">
+                                        <input type="checkbox" class="custom-checkbox child" id="group_2" onclick="myFunction()">
+                                        <label class="search__element_orgped" style="margin-left: 10px;" for="group_2">Использовать данные контактного лица организации</label>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center;">
+                                <button id="recovrybtn" class="submit_btn btn btn_save" onclick="RecoveryPassword()" style="background: transparent;color: black!important;cursor: pointer;width: 180px;margin-right: 10px;margin-bottom: 20px;">
+                                    Сбросить пароль (новый будет выслан на почту)
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white; margin: 0; margin-bottom: 15px;" href="#" value="Сохранить" />
+                    </div>
+                </form>
+                <div style="text-align: center;">
+                    <button class="submit_btn btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Отмена</button>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
+        <script type="text/javascript">
+            surname = '@Model.SurnameContact';
+            name = '@Model.NameContact';
+            patronymic = '@Model.PatronymicnameContact?.ToString()';
+            function myFunction() {
+                var checkBox = document.getElementById("group_2");
+                if (checkBox.checked == true) {
+                    $("#surname_inp").val(surname);
+                    $("#name_inp").val(name);
+                    $("#patronymic_inp").val(patronymic);
+                    $('#surname_inp').attr('readonly', true);
+                    $('#name_inp').attr('readonly', true);
+                    $('#patronymic_inp').attr('readonly', true);
+                } else {
+                    $("#surname_inp").val('');
+                    $("#name_inp").val('');
+                    $("#patronymic_inp").val('');
+                    $('#surname_inp').attr('readonly', false);
+                    $('#name_inp').attr('readonly', false);
+                    $('#patronymic_inp').attr('readonly', false);
+                }
+            }
+            function RecoveryPassword(){
+                $("#recovrybtn").prop('disabled', true);
+                $.ajax({
+                    type: "PUT",
+                    url: '@Url.Action("RecoveryPassword", "Organizations")?idUser=@Model.ID_User&idOrganization=@Model.ID_Organization',
+                    contentType: "application/json; charset=utf-8",
+                    success: function () { alert('Пароль пользователя успешно сброшен'); }
+                });
+            }
+        </script>
+    </div>
+</div>

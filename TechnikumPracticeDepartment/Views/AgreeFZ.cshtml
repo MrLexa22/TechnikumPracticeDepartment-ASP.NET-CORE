@@ -1,0 +1,52 @@
+﻿@using TechnikumPracticeDepartment.ModelsDB
+@model User
+
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<link rel="stylesheet" type="text/css" href="~/css/uploadFile.css?version=0.1">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div style="color: black;">
+                <p class="employees_title" style="text-align: center;">Согласие на обработку персональных данных</p>
+                </br>
+                <p>Подтверждая данное согласие, я, <span style="font-weight:bold;"> @Model.SurnameUser @Model.NameUser @Model.PatronymicNameUser?.ToString(), </span> даю свое согласие ФГБОУ ВО "РЭУ им. Г. В. Плеханова" МПТ (Электронный ресурс "Производственная практика") на обработку моих персональных данных.</p>
+                </br>
+                <p>Согласие касается фамилии, имени, отчества, дате рождении, номера телефона, электронной почты, фотографии (если лично её загружу) и других данных, которые могут потребоваться при работе с электронным ресурсом.</p>
+                </br>
+                <p>Я даю согласие на использование персональных данных исключительно в целях <span>работы с электронным ресуром</span>, а также на хранение данных об этих результатах на электронных носителях.</p>
+                </br>
+                <p>Настоящее согласие предоставляется мной на осуществление действий в отношении моих персональных данных, которые необходимы для достижения указанных выше целей, включая (без ограничения) сбор, систематизацию, накопление, хранение, уточнение (обновление, изменение), использование, передачу третьим лицам для осуществления действий по обмену информацией, обезличивание, блокирование персональных данных, а также осуществление любых иных действий, предусмотренных действующим законодательством Российской Федерации.</p>
+                </br>
+                <p>Я проинформирован, что ФГБОУ ВО "РЭУ им. Г. В. Плеханова" МПТ гарантирует обработку моих персональных данных в соответствии с действующим законодательством Российской Федерации как неавтоматизированным, так и автоматизированным способами, в соответсвии со ч. 2 ст. 9 Федерального закона от 27.07.2006 №152-ФЗ "О персональных данных".</p>
+                </br>
+                <p>Данное согласие действует до достижения целей обработки персональных данных или в течение срока хранения информации.</p>
+                </br>
+                <p>Данное согласие может быть отозвано в любой момент по моему письменному заявлению.</p>
+                </br>
+                <p>Я подтверждаю, что, давая такое согласие, я действую по собственной воле и в своих интересах.</p>
+                </br>
+                <div style="text-align: center;">
+                    <div><a href="/AgreeFZ/AgreeFZTrue" class="btn btn_save submit_btn" style="background-color: green; margin-left:0;">Подтверждаю</a></div>
+                    <div style="margin-top: 20px;"><a href="/Account/Logout" class="btn btn_save submit_btn" style="background-color: red;">Не подтверждаю</a></div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+

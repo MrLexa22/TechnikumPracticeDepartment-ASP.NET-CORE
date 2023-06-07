@@ -1,0 +1,190 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model ConcatinationStudentWithPractice
+<div class="modal-content">
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+        .info_block{
+            width: 95%!important;
+        }
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+
+        .labelForm {
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+            width: 200px;
+            margin: 10px;
+            width: 85px;
+            display: inline-block;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .obratnii-zvonok{
+            width: 45%;
+            max-width: none!important;
+        }
+        .info_student{
+            display: block!important;
+        }
+
+        .info_student>div {
+            width: 100%!important
+        }
+        @@media(max-width: 650px){
+            .obratnii-zvonok {
+                width: 90%;
+                max-width: none !important;
+            }
+            .img_student{
+                width: 170px !important;
+                height: 190px!important;
+                margin: 0!important;
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            position: relative;
+            flex-grow: 1;
+            flex-shrink: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            padding: 0 11px;
+            text-align: left;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            background-color: #edeff0;
+            color: #303233;
+            height: 32px;
+            line-height: 30px;
+            border: 1px solid transparent;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div style="display: flex; justify-content: end;">
+                    <p style="cursor: pointer; font-weight: bold; font-size: 28px;" onclick='$(".modal-content").remove();'>X</p>
+                </div>
+                <div class="title">@Model.response.Vacancy.NameVacancy</div>
+                <div class="info_student">
+                    <div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Наименование организации: </p>
+                            <p>@Model.response.Vacancy.Organization.FullNameOrganization</p>
+                        </div>
+                        <div class="form-zap">
+                            <p style="width:100%; margin-left: 0; margin-bottom: 5px;" class="labelForm">Адрес организации: </p>
+                            <p>@Model.response.Vacancy.Organization.AddressOrganization</p>
+                        </div>
+                        <div class="form-zap" style="margin-top: 10px;">
+                            <div style="width: fit-content;"><a target="_blank" asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@Model.vacancy.IdVacancy" style="color: blue;">Ссылка на вакансию</a></div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div class="info_student">
+                    <div сlass="info_block">
+                        <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Отклик:</h3>
+                        <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Текущий статус:</span> @(Model.response.Status == 0 ? "создан" : (Model.response.Status == 1 ? "на рассмотрении (ожидание ответа студента)" : (Model.response.Status == 2 ? "на рассмотрении (получен ответ студента)" : (Model.response.Status == 3 ? "принят (на рассмотрении ОУ)" : (Model.response.Status == 4 ? "принят" : (Model.response.Status == 5 ? "отказ" : "отказ ОУ"))))))</p>
+                        <p style="margin-bottom: 5px;"><span style="font-weight: bold; margin-bottom: 5px;">Дата и время отклика:</span> @if(Model.typeResponse == 1){@Model.response.DateTimeCreate.ToShortDateString() @Model.response.DateTimeCreate.ToShortTimeString()}else{@Model.response2.DateTimeCreate.ToShortDateString() @Model.response2.DateTimeCreate.ToShortTimeString()}</p>
+                        <p style="margin-top: 5px;"><span style="font-weight: bold; margin-top: 5px;">Комментарий организации:</span></p>
+                        <p>@Html.Raw(Model.response.CommentOrganization?.Replace(Environment.NewLine, "<br/>"))</p>
+                        <p><span style="font-weight: bold;">Комментарий студента:</span></p>
+                        @if (Model.response.Status == 0 || Model.response.Status == 1 || Model.response.Status == 2)
+                        {
+                            <form asp-action="EditStatus" asp-controller="StudentsResponses" asp-route-id="@Model.response.IdResponse" asp-route-typeResponse="@Model.typeResponse" method="post" class="callback-from" enctype="multipart/form-data">
+                                <textarea asp-for="response.CommentStudent" class="textarea_input" style="resize: none;" placeholder="Комментарий студента (Вы можете указать дополнительную информацию)"></textarea>
+                                @if (Model.typeResponse == 2)
+                                {
+                                    <p style="font-weight: bold; line-height: 2.3; margin-right: 15px; margin-top: 5px;">Статус: </p>
+                                    <div style="max-width: 280px;">
+                                        <select asp-for="response.Status" style="width: 100%;" class="select_option1">
+                                            <option value="2">На рассмотрении (попросить дополнительные сведения от организации)</option>
+                                            <option value="3">Принять приглашение</option>
+                                            <option value="5">Отказать</option>
+                                        </select>
+                                    </div>
+                                }
+                            </form>
+                            <div style="margin-top: 15px;">
+                                <input class="btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" id="subbtnff" type="button" value="Изменить" />
+                            </div>
+                        }
+                        else
+                        {
+                            <p>@Html.Raw(Model.response.CommentStudent?.Replace(Environment.NewLine, "<br/>"))</p>
+                        }
+                    </div>
+                </div>
+                @if(Model.typeResponse == 1 && Model.response.Status != 3)
+                {
+                    <hr class="hr_style" size="1px" noshade>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <div style="width: fit-content;"><a asp-action="DeleteResponse" asp-controller="StudentsResponses" asp-route-idResponse="@Model.response.IdResponse" asp-route-fromDelete="@Model.fromDeletet" class="btn btn_save" style="background-color: orangered; margin: 0; color: white; cursor: pointer;">Удалить отклик</a></div>
+                    </div>
+                }
+                <hr class="hr_style" size="1px" noshade>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Закрыть</button>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
+        <script>
+            $(document).ready(function () {
+                $('.select_option1').selectize();
+            });
+
+            $("#subbtnff").click(function (e) {
+                var placeholderElement = $('.modal');
+                var form = $(this).parents('.modal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = form.serialize();
+
+                $.post(actionUrl, dataToSend).done(function (data) {
+                    $.ajaxSetup({ cache: false });
+                    $.get('/StudentsResponses/InfoResponse?idResponse=' + @Model.response.IdResponse + '&typeResponse=' + @Model.typeResponse + '&fromDelete='+@Model.fromDeletet, function (data) {
+                        $(".modal-content").remove();
+                        $('#dialogContent').html(data);
+                        $('#modDialog').show();
+                        alert("Статус отклика обновлён!");
+                        var url = '@Url.Action("GetList", "StudentsResponses")?search=' + document.getElementById("input_search").value + '&sortList=' + document.getElementById("sortList").value + '&filterListType=' + $('#filterListType').val() + '&filterListStatus=' + $('#filterListStatus').val();
+                        $('#panel').load(url);
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>

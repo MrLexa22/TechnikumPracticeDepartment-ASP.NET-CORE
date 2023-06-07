@@ -1,0 +1,68 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsPracticeChartPages
+@model IndexPracticeChartModel
+@addTagHelper *, TechnikumPracticeDepartment
+<div class="table_container">
+    <table class="table_cadri">
+        <tr class="title_table">
+            <th>Наименование практики</th>
+            <th>Период</th>
+            <th>Группы</th>
+            <th></th>
+        </tr>
+        @foreach (var a in Model.list_practiceChart)
+        {
+            <tr>
+                <td>
+                    <p class="point_to">
+                        <a asp-action="AddEditPracticeChart" asp-controller="PracticeChart" asp-route-id="@a.IdChart">
+                            @a.Practice.NamePractice <br /> (@a.Practice.NameProfModule)
+                        </a>
+                    </p>
+                </td>
+                <td>
+                    <p>(@a.DaysPractice)</p>
+                    @foreach(var j in a.PracticesChartDates.OrderBy(p=>p.DateEnd))
+                    {
+                        <p>@j.DateStart.ToShortDateString() - @j.DateEnd.ToShortDateString()</p>
+                    }
+                </td>
+                <td>
+                    @if (a.PracticesChartGroups.Count() > 0)
+                    {
+                        <input type="checkbox" class="read-more-state" id="post-@a.IdChart.ToString()" />
+
+                        <ul class="read-more-wrap">
+                            @for (int j = 0; j < a.PracticesChartGroups.Count(); j++)
+                            {
+                                @if (j < 4)
+                                {
+                                    <li style="max-width: 400px;">@a.PracticesChartGroups.ElementAt(j).Group.NameGroup</li>
+                                }
+                                else
+                                {
+                                    <li style="max-width: 400px;" class="read-more-target">@a.PracticesChartGroups.ElementAt(j).Group.NameGroup</li>
+                                }
+                            }
+                        </ul>
+                        @if (a.PracticesChartGroups.Count() > 4)
+                        {
+                            <label for="post-@a.IdChart.ToString()" class="read-more-trigger"></label>
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="AddEditPracticeChart" asp-controller="PracticeChart" asp-route-id="@a.IdChart">
+                        <img style="max-width: 30px;" src="~/images/edit.png">
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-typeSortList="@(Model.FilterViewModel.TypeSortList)"
+               page-url-filterListByGroup="@(Model.FilterViewModel.FilterListByGroup)"
+               page-url-filterListByActivate="@(Model.FilterViewModel.FilterListByActivate)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

@@ -1,0 +1,54 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsEmployeesPages
+@model IndexEmployeesModel
+@addTagHelper *, TechnikumPracticeDepartment
+<div class="table_container">
+    <table class="table_cadri">
+        <tr class="title_table">
+            <th>Фамилия Имя Отчество</th>
+            <th>Email</th>
+            <th>Роли в системе</th>
+            <th></th>
+        </tr>
+        @foreach (var a in Model.list_employees)
+        {
+            <tr>
+                <td>
+                    <p class="point_to">
+                        <a asp-action="AddEditEmployee" asp-controller="Employees" asp-route-id="@a.IdUser">
+                            @a.SurnameUser @a.NameUser @a.PatronymicNameUser
+                        </a>
+                    </p>
+                </td>
+                <td>
+                    <p style="width: 90%; word-break: break-all;">@a.Email</p>
+                    @if (a.IsAvaliable == null || a.IsAvaliable == true)
+                    {
+                        <p style="color: green;">Активный</p>
+                    }
+                    else
+                    {
+                        <p style="color: red;">Заблокирован</p>
+                    }
+                </td>
+                <td>
+                    @foreach (var j in a.UsersRoles)
+                    {
+                        <p>@j.Role.NameRole</p>
+                    }
+                </td>
+                <td>
+                    <a asp-action="AddEditEmployee" asp-controller="Employees" asp-route-id="@a.IdUser">
+                        <img style="max-width: 30px;" src="~/images/edit.png">
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-typeSortListEmployees="@(Model.FilterViewModel.TypeSortListEmployees)"
+               page-url-role="@(Model.FilterViewModel.Role)"
+               page-url-activate="@(Model.FilterViewModel.Activate)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

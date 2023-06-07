@@ -1,0 +1,41 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationsPages
+@model IndexOrganizationModel
+@addTagHelper *, TechnikumPracticeDepartment
+<div class="table_container">
+    <table class="table_cadri">
+        <tr class="title_table">
+            <th>Наименование организации</th>
+            <th>Контакты руководителя</th>
+            <th></th>
+        </tr>
+        @foreach (var a in Model.list_organization)
+        {
+            <tr>
+                <td>
+                    <p class="point_to">
+                        <a asp-action="AddEditOrganization" asp-controller="Organizations" asp-route-id="@a.IdOrganization">
+                            @a.NotFullNameOrganization @if (a.IsAvaliable == false){<span style="color: red;">(Удалено)</span>}
+                        </a>
+                    </p>
+                </td>
+                <td>
+                    <div>
+                        <p>ФИО: @a.SurnameContactOfOrganization @a.NameContactOfOrganization @a.PatronymicContactOfOrganization?.ToString()</p>
+                        <p>Номер телефона: @if(a.PhoneNumberContactOfOrganization != null){<text>@a.PhoneNumberContactOfOrganization</text>} else{<text>не указан</text>}</p>
+                    </div>
+                </td>
+                <td>
+                    <a asp-action="AddEditOrganization" asp-controller="Organizations" asp-route-id="@a.IdOrganization">
+                        <img style="max-width: 30px;" src="~/images/edit.png">
+                    </a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="position: absolute; bottom: 0; left: 0; margin-top:15px;">
+    <page-link page-model="Model.PageViewModel" page-action="GetList"
+               page-url-typeSortList="@(Model.FilterViewModel.TypeSortList)"
+               page-url-filterAvaliable="@(Model.FilterViewModel.FilterAvaliable)"
+               page-url-search="@(Model.FilterViewModel.Search)"></page-link>
+</div>

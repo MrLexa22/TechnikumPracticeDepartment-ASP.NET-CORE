@@ -1,0 +1,41 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model AddEditVacancy
+@if (Model.Responses_students.Count() > 0)
+{
+    @foreach (var a in Model.Responses_students)
+    {
+        <div style="margin-bottom: 10px;box-shadow: 0 2px 12px 0 rgb(48 50 51 / 40%);padding: 20px;border-radius: 15px;">
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Студент:</span> @a.student.User.SurnameUser @a.student.User.NameUser @a.student.User.PatronymicNameUser?.ToString()</p>
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Искомая должность:</span> @a.student.Resume?.DesiredPosition?.ToString()</p>
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Специальность:</span> [@a.student.Group.Specialization.SpecializationCode] @a.student.Group.Specialization.SpecializationName</p>
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Квалификация:</span> @a.student.Group.Specialization.NameQualification</p>
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Курс:</span> @a.Course</p>
+            <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Год выпуска:</span> @a.YearOfGraduation</p>
+            @if (a.responseFromStudent != null)
+            {
+                <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Дата и время отклика:</span> @a.responseFromStudent.DateTimeCreate.ToShortDateString() @a.responseFromStudent.DateTimeCreate.ToShortTimeString()</p>
+                <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Статус отклика:</span> @a.statusResponse</p>
+                <div onclick="infoStudent(@a.student.IdStudent,1)" style="color: blue; cursor: pointer; width: fit-content;">Подробнее</div>
+            }
+            @if (a.responseFromOrganization != null)
+            {
+                <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Дата и время отклика:</span> @a.responseFromOrganization.DateTimeCreate.ToShortDateString() @a.responseFromOrganization.DateTimeCreate.ToShortTimeString()</p>
+                <p style="margin-bottom: 5px;"><span style="font-weight: bold;">Статус отклика:</span> @a.statusResponse</p>
+                <div onclick="infoStudent(@a.student.IdStudent,2)" style="color: blue; cursor: pointer; width: fit-content;">Подробнее</div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div>Нет откликов</div>
+}
+<script>
+    function infoStudent(idStudent, typeResponse) {
+        $.ajaxSetup({ cache: false });
+        $.get('/ManageVacancy/InfoResponse?IdStudent=' + idStudent + '&IdVacancy=' + @Model.IdVacancy+'&typeResponse=' + typeResponse + '&fromDelete=1', function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+</script>

@@ -1,0 +1,196 @@
+﻿@model updateImageStudent
+<div class="modal-content">
+    <link rel="stylesheet" type="text/css" href="~/css/main_page.css">
+    <link rel="stylesheet" type="text/css" href="~/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/calendar.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+    <link rel="stylesheet" type="text/css" href="~/css/select.css">
+    <link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+    <link rel="stylesheet" type="text/css" href="~/css/custom_2.css" />
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+
+        .labelForm {
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+        }
+
+        .title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-picture-upload {
+            display: inline;
+        }
+
+        .imagePreview {
+            vertical-align: middle;
+            width: 150px;
+            height: 150px;
+            border-radius: 40%;
+            margin-right: 8px;
+            object-fit: cover;
+            /*    -webkit-box-shadow: 0px 3px 10px 2px rgba(0,0,0,0.35);
+            -moz-box-shadow: 0px 3px 10px 2px rgba(0,0,0,0.35);
+            box-shadow: 0px 3px 10px 2px rgba(0,0,0,0.35);*/
+        }
+
+        .hidden {
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            left: -999999px;
+        }
+
+        .action-button {
+            /*    border: 1px solid black;
+            background: none;*/
+            padding: 8px;
+            cursor: pointer;
+            outline: 0;
+            border-radius: 6px;
+            background: #C62306;
+            &.mode-upload
+
+        {
+            color: #004085;
+            border-color: #b8daff;
+            background-color: #C62306;
+        }
+
+        &.mode-remove {
+            /*    color: #721c24;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;*/
+        }
+
+        }
+    </style>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div class="title">Обновление изображение студента</div>
+                <form asp-action="UpdateImageStudentPost" asp-controller="Home" method="post" class="callback-from" enctype="multipart/form-data">
+                    <div>
+                        <div class="form-zap">
+                            <div class="profile-picture-upload">
+                                <img src="@Model.FTTPPathImage" alt="Profile picture preview" class="imagePreview">
+                                <a class="action-button mode-upload" style="margin-top: 15px; color: White;">Загрузить</a>
+                                <input accept="image/png, image/jpg, image/jpeg" type="file" id="olo" autocomplete="off" class="hidden" name="uploadedFile" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="@Model.FTTPPathImage" style="color: red;"></span>
+                        <input type="text" asp-for="@Model.FTTPPathImage" id="checker" value="" class="inputs imz-in" style="width: 0; height: 0; opacity: 0;" />
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white; margin: 0; margin-bottom: 15px;" href="#" value="Сохранить" />
+                    </div>
+                </form>
+                <div style="text-align: center;">
+                    <button class="submit_btn btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('olo').addEventListener('change', function () {
+            if (this.value) {
+                document.getElementById('checker').value = 'true';
+                console.log(document.getElementById('checker').value);
+            }
+        });
+
+        picturePreview = document.querySelector(".imagePreview");
+        actionButton = document.querySelector(".action-button");
+        fileInput = document.querySelector("input[name='uploadedFile']");
+        fileReader = new FileReader();
+
+        DEFAULT_IMAGE_SRC = "https://cs6.pikabu.ru/avatars/852/v852649-75385198.jpg";
+
+        actionButton.addEventListener("click", () => {
+            if (picturePreview.src !== DEFAULT_IMAGE_SRC) {
+                resetImage();
+            } else {
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener("change", () => {
+            refreshImagePreview();
+        });
+
+        function resetImage() {
+            setActionButtonMode("upload");
+            picturePreview.src = DEFAULT_IMAGE_SRC;
+            document.getElementById('checker').value = '';
+            fileInput.value = "";
+        }
+
+        function setActionButtonMode(mode) {
+            let modes = {
+                "upload": function () {
+                    actionButton.innerText = "Загрузить";
+                    actionButton.classList.remove("mode-remove");
+                    actionButton.classList.add("mode-upload");
+                },
+                "remove": function () {
+                    actionButton.innerText = "Удалить";
+                    actionButton.classList.remove("mode-upload");
+                    actionButton.classList.add("mode-remove");
+                }
+            }
+            return (modes[mode]) ? modes[mode]() : console.error("unknown mode");
+        }
+
+        function refreshImagePreview() {
+            if (picturePreview.src !== DEFAULT_IMAGE_SRC) {
+                picturePreview.src = DEFAULT_IMAGE_SRC;
+            } else {
+                if (fileInput.files && fileInput.files.length > 0) {
+                    var fileName = fileInput.value,
+                        idxDot = fileName.lastIndexOf(".") + 1,
+                        extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+                    if ((extFile == "jpg" || extFile == "jpeg" || extFile == "png") && fileInput.files[0].size < 52428800) {
+                        fileReader.readAsDataURL(fileInput.files[0]);
+                        fileReader.onload = (e) => {
+                            picturePreview.src = e.target.result;
+                            setActionButtonMode("remove");
+                        }
+                    }
+                    else {
+                        alert("Только jpg/jpeg/png файлы можно использовать! Максимальный размер 50МБ");
+                        fileInput.value = "";
+                        document.getElementById('checker').value = '';
+                    }
+                }
+            }
+        }
+
+        refreshImagePreview();
+    </script>
+</div>

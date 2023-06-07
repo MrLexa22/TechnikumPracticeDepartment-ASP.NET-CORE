@@ -1,0 +1,201 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsPracticePages
+@model AddEditPractice
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tarekraafat-autocomplete.js/10.2.7/autoComplete.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tarekraafat-autocomplete.js/10.2.7/css/autoComplete.01.min.css">
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<style>
+    .information_div > div > div > div:not(:last-child) {
+        width: 500px !important;
+    }
+    .autoComplete_wrapper>input {
+        font-size: 14px !important;
+        background-color: transparent !important;
+        color: black !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding-left: 0px !important;
+        border-radius: 0px !important;
+        border: 0 !important;
+        outline: 0 !important;
+    }
+    .autoComplete_wrapper{
+        width: 100%;
+    }
+</style>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_Practice != 0)
+                {
+                    <p class="employees_title">@Model.NamePractice @if(Model.IsSaved == false) {<span style="color: red;">(НЕ СОХРАНЕНО)</span>}</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление практики @if(Model.IsSaved == false) {<span style="color: red;">(НЕ СОХРАНЕНО)</span>}</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="Practice" asp-action="AddEditPracticePost" asp-route-id="@Model.ID_Practice" method="post" class="callback-from">
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Наименование профессионального модуля</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Practice == 0){<text>style="display: none;"</text>} id="old_Email">@Model.NameProfModuel</p>
+                                <div class="inputs_Email inputs_values" @if(Model.ID_Practice != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="NameProfModuel" class="search-field" id="input_Email">
+                                    </div>
+                                    <span asp-validation-for="NameProfModuel" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Practice == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Наименование практики</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Practice == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.NamePractice</p>
+                                <div class="inputs_CodeBlock inputs_values" @if(Model.ID_Practice != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                        <input type="text" asp-for="ID_Practice" value="@Model.ID_Practice" />
+                                    </div>
+                                    <div class="input_dan search">
+                                        <input asp-for="NamePractice" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Наименование практики"></input>
+                                    </div>
+                                    <span asp-validation-for="NamePractice" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Practice == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Специальности</p>
+                        <div>
+                            <div style="width: 650px;">
+                                <div class="search" style="margin-bottom: 0px; width:80%;">
+                                    <input type="text" onkeyup="search_group()" id="search-field_orgped" class="search-field" style="width: 100%;" placeholder="Введите наименование специальности">
+                                    <img src="~/images/search.svg" alt="" class="search-icon">
+                                </div>
+                                <div class="search-results">
+                                    <div class="checkboxes_element">
+                                        @for (int i = 0; i < Model.list_specializaion.Count(); i++)
+                                        {
+                                            <div style="display:none;">
+                                                <input type="text" asp-for="@Model.list_specializaion[i].ID_Specializaion">
+                                                <input type="text" asp-for="@Model.list_specializaion[i].CodeSpecializaion">
+                                                <input type="text" asp-for="@Model.list_specializaion[i].NameSpecializaion">
+                                            </div>
+                                            <input type="checkbox" asp-for="@Model.list_specializaion[i].IsSelected" class="custom-checkbox child" id="group_@Model.list_specializaion[i].ID_Specializaion">
+                                            <label style="color: black;" class="child_el search__element_orgped" for="group_@Model.list_specializaion[i].ID_Specializaion">[@Model.list_specializaion[i].CodeSpecializaion] @Model.list_specializaion[i].NameSpecializaion</label>
+                                            <div></div>
+                                        }
+                                    </div>
+                                </div>
+                                <span asp-validation-for="list_specializaion" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block_info">
+                    <div style="display: flex; margin-top: 10px;">
+                        <input type="submit" class="btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                    </div>
+                </div>
+            </form>
+            @if (Model.ID_Practice > 0)
+            {
+                <hr class="hr_style" size="1px" noshade>
+                <div class="block_info">
+                    <p class="block_title">Удаление практики</p>
+                    <div style="margin-left: 10px;">
+                        @if (Model.IsAvaliableForDelete == true)
+                        {
+                            <a asp-action="DeletePractice" asp-controller="Practice" asp-route-id="@Model.ID_Practice" style="color: red; border: 1px solid rgb(132, 132, 132); border-radius: 5px; padding: 6px 20px;">Удалить</a>
+                        }
+                        else if (Model.IsAvaliableForDelete == false)
+                        {
+                            <p style="color: black; margin-bottom: 15px;">Данная практика используется в графиках практик, удаление невозможно</p>
+                        }
+                    </div>
+                </div>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Practice">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $.jMaskGlobals = {
+        maskElements: 'input,td,span,div',
+        dataMaskAttr: '*[data-mask]',
+        dataMask: true,
+        watchInterval: 300,
+        watchInputs: true,
+        watchDataMask: false,
+        byPassKeys: [9, 16, 17, 18, 36, 37, 38, 39, 40, 91],
+        translation: {
+            '0': { pattern: /\d/ },
+            '9': { pattern: /\d/, optional: true },
+            '#': { pattern: /\d/, recursive: true },
+            'A': { pattern: /[a-zA-Z0-9]/ },
+            'S': { pattern: /[А-Яа-яЁё,. ]/ }
+        }
+    };
+    $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=1');
+    const autoCompleteJS = new autoComplete({
+        placeHolder: "Наименование профессионального модуля",
+        data: {
+            src: [
+                @foreach(var a in Model.old_profModules)
+                {
+                    <text>"@a",</text>
+                }
+            ],
+            cache: true,
+        },
+        selector: "#input_Email",
+        resultItem: {
+            highlight: true
+        },
+        events: {
+            input: {
+                selection: (event) => {
+                    const selection = event.detail.selection.value;
+                    autoCompleteJS.input.value = selection.replace(/&quot;/g, '"');
+                }
+            }
+        }
+    });
+    $("#input_Email").attr("autocomplete", "off");
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.2"></script>

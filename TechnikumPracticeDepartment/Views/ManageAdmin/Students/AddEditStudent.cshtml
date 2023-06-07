@@ -1,0 +1,447 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsStudentsPages
+@model AddEditStudent
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.5">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_Student != 0)
+                {
+                    <p class="employees_title">@Model.SurnameUser @Model.NameUser</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление студента</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <div class="container_editWithTwoSections">
+                @if (User.IsInRole("Администратор"))
+                {
+                    <form asp-controller="Students" asp-action="AddEditStudentPost" asp-route-id="@Model.ID_Student" method="post" class="callback-from">
+                        <div class="information_div" style="height: fit-content;">
+                            <div>
+                                <p>Email (логин)</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_Email">@Model.Email</p>
+                                        <div class="inputs_Email inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                            <div class="input_dan search">
+                                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                                    <input type="text" asp-for="ID_User" value="@Model.ID_User" />
+                                                </div>
+                                                    <input asp-for="Email" type="text" class="search-field" id="input_Email" style="width: 100%;" placeholder="Email (логин) студента"></input>
+                                            </div>
+                                            <span asp-validation-for="Email" style="color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                        <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Фамилия</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.SurnameUser</p>
+                                        <div class="inputs_CodeBlock inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                            <div class="input_dan search">
+                                                    <input asp-for="SurnameUser" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Фамилия студента"></input>
+                                            </div>
+                                            <span asp-validation-for="SurnameUser" style="color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                        <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Имя</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_NameStudent">@Model.NameUser</p>
+                                        <div class="inputs_NameStudent inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                            <div class="input_dan search">
+                                                    <input asp-for="NameUser" type="text" class="search-field" id="input_NameStudent" style="width: 100%;" placeholder="Имя студента"></input>
+                                            </div>
+                                            <span asp-validation-for="NameUser" style="color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                        <a id="editBTN_NameStudent" onclick="edit('NameStudent', true);" href="#"><img id="img_edit_NameStudent" src="~/images/edit.svg"><img style="display: none;" id="img_cross_NameStudent" src="~/images/cross.svg"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Отчество (необязат.)</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_PatronymicName">@Model.PatronymicNameUser?.ToString()</p>
+                                        <div class="inputs_PatronymicName inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                            <div class="input_dan search">
+                                                    <input asp-for="PatronymicNameUser" type="text" class="search-field" id="input_PatronymicName" style="width: 100%;" placeholder="Отчество студента"></input>
+                                            </div>
+                                            <span asp-validation-for="PatronymicNameUser" style="color: red;"></span>
+                                        </div>
+                                    </div>
+                                    <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                        <a id="editBTN_PatronymicName" onclick="edit('PatronymicName', true);" href="#"><img id="img_edit_PatronymicName" src="~/images/edit.svg"><img style="display: none;" id="img_cross_PatronymicName" src="~/images/cross.svg"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Группа</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_YearOfEducation" old_selected_YearOfEducation="@Model.SelectedGroup_ID">@if (Model.ID_Student > 0)
+                                            {
+                                                @Model.list_groups.Where(p => p.IdGroup == Model.SelectedGroup_ID).First().NameGroup
+                                            }
+                                        </p>
+                                        <div class="inputs_YearOfEducation inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                            <select class="select_option" id="select_YearOfEducation" asp-for="SelectedGroup_ID">
+                                                @foreach (var a in Model.list_groups)
+                                                {
+                                                    <option value="@a.IdGroup">@a.NameGroup</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                        <a id="editBTN_YearOfEducation" onclick="edit_Select('YearOfEducation',true);" href="#"><img id="img_edit_YearOfEducation" src="~/images/edit.svg"><img style="display: none;" id="img_cross_YearOfEducation" src="~/images/cross.svg"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Номер телефона (необязат.)</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_PhoneNumber">@if (Model.PhoneNumber == null)
+                                            {
+                                                <text></text>
+                                            }else{
+                                                <text>@Model.PhoneNumber</text>}</p>
+                                            <div class="inputs_PhoneNumber inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                                <div class="input_dan search">
+                                                    <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                                        <input type="text" asp-for="ID_Student" value="@Model.ID_Student" />
+                                                    </div>
+                                                        <input asp-for="PhoneNumber" type="text" class="search-field" id="input_PhoneNumber" style="width: 100%;" placeholder="Номер телефона"></input>
+                                                </div>
+                                                <span asp-validation-for="PhoneNumber" style="color: red;"></span>
+                                            </div>
+                                        </div>
+                                        <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                            <a id="editBTN_PhoneNumber" onclick="edit('PhoneNumber', true);" href="#"><img id="img_edit_PhoneNumber" src="~/images/edit.svg"><img style="display: none;" id="img_cross_PhoneNumber" src="~/images/cross.svg"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p>Дата рождения (необязат.)</p>
+                                    <div>
+                                        <div>
+                                            <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_DateOfBirthday">@Model.DateOfBirthday?.ToString()</p>
+                                            <div class="inputs_DateOfBirthday inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                                <div class="input_dan search">
+                                                        <input asp-for="DateOfBirthday" type="date" class="search-field" id="input_DateOfBirthday" style="width: 100%;"></input>
+                                                </div>
+                                                <span asp-validation-for="DateOfBirthday" style="color: red;"></span>
+                                            </div>
+                                        </div>
+                                        <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                            <a id="editBTN_DateOfBirthday" onclick="editDatePicker('DateOfBirthday', true);" href="#"><img id="img_edit_DateOfBirthday" src="~/images/edit.svg"><img style="display: none;" id="img_cross_DateOfBirthday" src="~/images/cross.svg"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; margin-top: 10px;">
+                                <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                            </div>
+                        </form>
+                }
+                else if(User.IsInRole("Сотрудник производственного отдела") && !User.IsInRole("Администратор"))
+                {
+                    <form asp-controller="Students" asp-action="EditStudentPhoneAndDatePost" asp-route-id="@Model.ID_Student" method="post" class="callback-from">
+                        <div class="information_div" style="height: fit-content;">
+                            <div>
+                                <p>Email (логин)</p>
+                                <div>
+                                    <div>
+                                        <p>@Model.Email</p>
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <div>
+                                                <input type="text" asp-for="ID_User" value="@Model.ID_User" />
+                                            </div>
+                                            <input asp-for="Email" type="text"/>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Email" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Фамилия</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.SurnameUser</p>
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;"><input asp-for="SurnameUser" type="text"/></div>
+                                    </div>
+                                    <span asp-validation-for="SurnameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Имя</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_NameStudent">@Model.NameUser</p>
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;"><input asp-for="NameUser" type="text" /></div>
+                                    </div>
+                                    <span asp-validation-for="NameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Отчество (необязат.)</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_PatronymicName">@Model.PatronymicNameUser?.ToString()</p>
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;"><input asp-for="PatronymicNameUser" type="text" /></div>
+                                    </div>
+                                    <span asp-validation-for="PatronymicNameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Группа</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_YearOfEducation" old_selected_YearOfEducation="@Model.SelectedGroup_ID">@if (Model.ID_Student > 0)
+                                            {
+                                                @Model.list_groups.Where(p => p.IdGroup == Model.SelectedGroup_ID).First().NameGroup
+                                            }
+                                        </p>
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">                                                
+                                            <select onchange="" onclick="return false;" id="select_YearOfEducation" asp-for="SelectedGroup_ID" onclick="return false;">
+                                                    @foreach (var a in Model.list_groups)
+                                                    {
+                                                        <option value="@a.IdGroup">@a.NameGroup</option>
+                                                    }
+                                            </select>
+                                         </div>
+                                        <span asp-validation-for="SelectedGroup_ID" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p>Номер телефона (необязат.)</p>
+                                <div>
+                                    <div>
+                                        <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_PhoneNumber">@if (Model.PhoneNumber == null)
+                                            {
+                                                <text></text>
+                                            }else{
+                                                <text>@Model.PhoneNumber</text>}</p>
+                                            <div class="inputs_PhoneNumber inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                                <div class="input_dan search">
+                                                    <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                                        <input type="text" asp-for="ID_Student" value="@Model.ID_Student" />
+                                                    </div>
+                                                        <input asp-for="PhoneNumber" type="text" class="search-field" id="input_PhoneNumber" style="width: 100%;" placeholder="Номер телефона"></input>
+                                                </div>
+                                                <span asp-validation-for="PhoneNumber" style="color: red;"></span>
+                                            </div>
+                                        </div>
+                                        <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                            <a id="editBTN_PhoneNumber" onclick="edit('PhoneNumber', true);" href="#"><img id="img_edit_PhoneNumber" src="~/images/edit.svg"><img style="display: none;" id="img_cross_PhoneNumber" src="~/images/cross.svg"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p>Дата рождения (необязат.)</p>
+                                    <div>
+                                        <div>
+                                            <p @if(Model.ID_Student == 0){<text>style="display: none;"</text>} id="old_DateOfBirthday">@Model.DateOfBirthday?.ToString()</p>
+                                            <div class="inputs_DateOfBirthday inputs_values" @if(Model.ID_Student != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                                <div class="input_dan search">
+                                                        <input asp-for="DateOfBirthday" type="date" class="search-field" id="input_DateOfBirthday" style="width: 100%;"></input>
+                                                </div>
+                                                <span asp-validation-for="DateOfBirthday" style="color: red;"></span>
+                                            </div>
+                                        </div>
+                                        <div @if(Model.ID_Student == 0){<text>style="display: none;"</text>}>
+                                            <a id="editBTN_DateOfBirthday" onclick="editDatePicker('DateOfBirthday', true);" href="#"><img id="img_edit_DateOfBirthday" src="~/images/edit.svg"><img style="display: none;" id="img_cross_DateOfBirthday" src="~/images/cross.svg"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; margin-top: 10px;">
+                                <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                            </div>
+                        </form>
+                }
+                @if (Model.ID_Student != 0)
+                {
+                    <div class="second_container_edit">
+                        <p style="color: rgb(103, 103, 103);font-weight: bold; margin: 10px; text-align: center;">Загруженное студентом изображение</p>
+                        <img style="width: 160px; height: 180px; margin: 10px; object-fit:cover;" src="@if(Model.PathImageStudent == null){ <text>https://stalstroyservis.ru/images/no_photo.png</text> }else{@Url.Action("GetImageFromServer","Additional",new {path = Model.PathImageStudent})}" />
+                        @if (Model.PathImageStudent != null)
+                        {
+                            <div style="margin-top:10px;"><a href="/Students/RemoveStudentImage/@Model.ID_Student" class="submit_btn btn btn_save" style="background-color: red; font-size: 10.5px; margin-right: 0px;">Удалить изображение</a></div>
+                        }
+                    </div>
+                }
+            </div>
+            @if (Model.ID_Student != 0)
+            {
+                <div>
+                    <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                    <div class="information_div" style="height: fit-content;">
+                        <div>
+                            <p>Резюме</p>
+                            <div>
+                                @if(Model.resum_is == false)
+                                {
+                                    <div style="margin-top: 10px; color: black;">Нет резюме</div>
+                                }
+                                else
+                                {
+                                    <div style="margin-top: 10px;"><a asp-action="ResumeStudent" asp-route-id="@Model.ID_Student" class="submit_btn btn btn_save" style="cursor: pointer; color: white; background-color: darkblue; margin-left: 0;">Просмотреть резюме</a></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                    <div class="information_div" style="height: fit-content;">
+                        <div>
+                            <p>Сброс пароля</p>
+                            <div>
+                                <div style="margin-top: 10px;"><a asp-action="RecoveryPassword" asp-route-id="@Model.ID_User" class="submit_btn btn btn_save" style="cursor: pointer; color: white; background-color: #242630; margin-left: 0;">Сбросить пароль</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                    <div class="information_div" style="height: fit-content;">
+                        <div>
+                            <p>Статус аккаунта</p>
+                            <div style="display: block;">
+                                @if (Model.IsEnded == true)
+                                {
+                                    <p style="color: red;">Обучение завершено. Выпустился(-ась) (группа завершила обучение)</p>
+                                }
+                                else if ((Model.IsStudent == true || Model.IsStudent == null) && Model.IsEnded == false)
+                                {
+                                    <p style="color: green;">Обучается (группа не завершила обучение)</p>
+                                    @if (Model.IsEnded == false)
+                                    {
+                                        <div style="margin-top: 15px;"><a asp-action="DeductStudent" asp-route-id="@Model.ID_Student" class="submit_btn btn btn_save" style="cursor: pointer; color: white; background-color: indianred; margin-left: 0;">Отчислить</a></div>
+                                    }
+                                }
+                                @if (Model.IsStudent == false)
+                                {
+                                    <p style="color: red; margin-top: 10px;">Отчислен(-а) / В академическом отпуске</p>
+                                    @if (Model.IsEnded == false)
+                                    {
+                                        <div style="margin-top: 15px;"><a class="submit_btn btn btn_save" asp-action="RecoveryStudent" asp-route-id="@Model.ID_Student" style="cursor: pointer; color: white; background-color: lightseagreen; margin-left: 0;">Восстановить</a></div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Students">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=2'); 
+    $("#input_PhoneNumber").mask('+7(999)999-99-99');
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.4.15"></script>
+<script type="text/javascript" src="~/js/select.js"></script>
+@if (ViewData["Recovery"] == "T")
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Пароль успешно сброшен!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">Письмо с новым паролем направлено пользователю на почту.</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}
+else if (ViewData["Recovery"] == "T1")
+{
+    <link rel="stylesheet" type="text/css" href="~/css/warning.css">
+    <div class="modal_window details-modal" style="position: absolute; width: 100%; height: 100%; background: #000; opacity: 0.7; max-width: none; max-height: none;">
+    </div>
+    <div class="details-modal">
+        <div class="details-modal-content" style="padding: 20px 20px 0 20px;">
+            <div style="text-align: right;">
+                <svg class="close_modal_btn" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+                      fill="black" />
+                </svg>
+            </div>
+        </div>
+        <div class="f-modal-alert">
+            <div class="f-modal-icon f-modal-warning scaleWarning">
+                <span class="f-modal-body pulseWarningIns"></span>
+                <span class="f-modal-dot pulseWarningIns"></span>
+            </div>
+        </div>
+        <p style="color: black; text-align: center; font-size:28px; font-weight:bold;">Аккаунт успешно создан!</p>
+        <div class="details-modal-content">
+            <p style="color: black;">Письмо с паролем для авторизации направлено пользователю на почту.</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="~/js/warning_modal/warning_window.js"></script>
+}

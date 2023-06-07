@@ -1,0 +1,199 @@
+.logo_rea {
+    max-width: 20vh;
+    max-height: 20vh;
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak,
+.ng-hide {
+    display: none !important;
+}
+
+ng\:form {
+    display: block;
+}
+
+.ng-animate-block-transitions {
+    transition: 0s all !important;
+    -webkit-transition: 0s all !important;
+}
+
+.container_authentication {
+    background: #fff;
+    border-radius: 16px;
+    color: black;
+    padding: 25px 50px;
+    text-align: left;
+}
+
+.email-login {
+    display: flex;
+    flex-direction: column;
+}
+
+.email-login label {
+    color: rgb(170 166 166);
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 15px 20px;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.cta-btn {
+    background-color: rgb(69, 69, 185);
+    color: white;
+    padding: 18px 20px;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+}
+
+.or span {
+    background: #fff;
+    padding: 0 10px;
+}
+
+.or {
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid rgb(245 239 239);
+    line-height: 0.1em;
+    margin: 25px 0;
+}
+
+.btn-text {
+    margin: 0;
+}
+
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.google-btn {
+    background: #fff;
+    border: solid 2px rgb(245 239 239);
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    padding: 10px 10px;
+    flex: auto;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+}
+
+.social-login img {
+    width: 24px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.card {
+    font-family: sans-serif;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    border-radius: 10px;
+    background-color: #ffff;
+    padding: 1.8rem;
+    box-shadow: 2px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+}
+
+.subtitle {
+    text-align: center;
+    font-weight: bold;
+}
+
+@media (max-width: 425px) {
+    .logo_rea {
+        max-width: 15vh;
+        max-height: 15vh;
+    }
+
+    .h1Enter {
+        margin-bottom: 5px;
+        margin-top: 3px;
+    }
+
+    .or {
+        margin: 15px 0;
+    }
+
+    .cta-btn {
+        margin-bottom: 10px;
+        padding: 14px 16px;
+    }
+
+    .container_authentication {
+        padding: 10px 20px;
+    }
+}
+
+@media (max-height: 610px) {
+    .logo_rea {
+        max-width: 12vh;
+        max-height: 12vh;
+    }
+
+    .h1Enter {
+        margin-bottom: 5px;
+        margin-top: 3px;
+    }
+
+    .or {
+        margin: 15px 0;
+    }
+
+    .cta-btn {
+        margin-bottom: 5px;
+        padding: 14px 16px;
+    }
+
+    .container_authentication {
+        padding: 10px 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        padding: 10px 10px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+}
+
+@media(max-height: 560px) {
+    .btn-text {
+        font-size: 14px;
+    }
+
+    .pptext {
+        margin-top: 0px;
+        margin-bottom: 4px;
+    }
+}

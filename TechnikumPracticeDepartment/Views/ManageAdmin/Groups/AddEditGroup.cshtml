@@ -1,0 +1,173 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsGroupsPages
+@model AddEditGroup
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.4">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_Group != 0)
+                {
+                    <p class="employees_title">@Model.NameGroup</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление группы</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="Groups" asp-action="AddEditGroupPost" asp-route-id="@Model.ID_Group" method="post" class="callback-from">
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Наименование группы</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Group == 0){<text>style="display: none;"</text>} id="old_Email">@Model.NameGroup</p><p> @if(Model.ID_Group != 0){<text>@Model.Course курс</text>}</p>
+                                <div class="inputs_Email inputs_values" @if(Model.ID_Group != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <input type="text" asp-for="ID_Group" value="@Model.ID_Group" />
+                                        </div>
+                                        <input asp-for="NameGroup" type="text" class="search-field" id="input_Email" style="width: 100%;" placeholder="Наименование группы"></input>
+                                    </div>
+                                    <span asp-validation-for="NameGroup" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Group == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Год начала обучения</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Group == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.YearStartEducation</p>
+                                <div class="inputs_CodeBlock inputs_values" @if(Model.ID_Group != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="YearStartEducation" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Год начала обучения"></input>
+                                    </div>
+                                    <span asp-validation-for="YearStartEducation" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Group == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Количество лет обучения</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Group == 0){<text>style="display: none;"</text>} id="old_YearOfEducation" old_selected_YearOfEducation="@Model.YearOfEducation">@Model.YearOfEducation @if(Convert.ToInt16(Model.YearOfEducation) < 5) { <text>года</text> }else{<text>лет</text>}</p>
+                                <div class="inputs_YearOfEducation inputs_values" @if(Model.ID_Group != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <select class="select_option" id="select_YearOfEducation" asp-for="YearOfEducation">
+                                        <option value="2">2 года</option>
+                                        <option value="3">3 года</option>
+                                        <option value="4">4 года</option>
+                                        <option value="5">5 лет</option>
+                                        <option value="6">6 лет</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Group == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_YearOfEducation" onclick="edit_Select('YearOfEducation',true);" href="#"><img id="img_edit_YearOfEducation" src="~/images/edit.svg"><img style="display: none;" id="img_cross_YearOfEducation" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Специальность</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Group == 0){<text>style="display: none;"</text>} id="old_Specialnost" old_selected_Specialnost="@Model.SelectedSpecialization">@Model.SelectedSpecialization_Name</p>
+                                <div class="inputs_Specialnost inputs_values" @if(Model.ID_Group != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <select asp-for="SelectedSpecialization" class="select_option" id="select_Specialnost" asp-items="@(new SelectList((from s in Model.list_specialization select new {IdSpecialization = s.IdSpecialization, NameSpecialization = s.SpecializationCode+". "+s.SpecializationName}),"IdSpecialization","NameSpecialization", Model.SelectedSpecialization))"></select>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Group == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Specialnost" onclick="edit_Select('Specialnost',true);" href="#"><img id="img_edit_Specialnost" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Specialnost" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; margin-top: 10px;">
+                    <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                </div>
+            </form>
+            @if (Model.ID_Group != 0)
+            {
+                <form asp-controller="Groups" asp-action="EditGroupStudents" asp-route-id="@Model.ID_Group" id="theForm" method="post">
+                    <hr class="hr_style" size="1px" noshade>
+                    <div class="block_info">
+                        <p class="block_title">Прикреплённые студенты</p>
+                        <table class="table_roles" style="height: fit-content;">
+                            <tr>
+                                <th>
+                                    <p>Контингент</p>
+                                </th>
+                                <th>
+                                    <div>
+                                        <div class="search" style="margin-bottom: 0px; width:80%;">
+                                            <input type="text" onkeyup="search_group()" id="search-field_orgped" class="search-field" style="width: 100%;" placeholder="Введите фио студента">
+                                            <img src="~/images/search.svg" alt="" class="search-icon">
+                                        </div>
+                                        <div class="search-results">
+                                            <div class="checkboxes_element">
+                                                @for (int i = 0; i < Model.students.Count(); i++)
+                                                {
+                                                    <div style="display:none;">
+                                                        <input type="text" asp-for="@Model.students[i].group_ID">
+                                                        <input type="text" asp-for="@Model.students[i].ID_Student">
+                                                    </div>
+                                                    <div></div>
+                                                    <label class="child_el search__element_orgped" style="display: flex;" for="group_@Model.students[i].ID_Student"><a asp-action="AddEditStudent" asp-controller="Students" style="color: blue;" asp-route-id="@Model.students[i].ID_Student">@Model.students[i].SurnameStudent @Model.students[i].NameStudent @Model.students[i].PatronymicNameStudent?.ToString()</a> <p style="font-style:italic; margin-left:25px;">@Model.students[i].Group_name</p> @if (@Model.students[i].IsStudent == false)
+                                                        {
+                                                            <p style="font-style:italic; margin-left:10px; color: red;">Отчислен/Академ. отпуск</p>
+                                                        }</label>
+                                                    <div></div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Groups">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=5');
+    $(document).ready(function () {
+        $('.select_option').selectize();
+    });
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.4"></script>
+
+
+

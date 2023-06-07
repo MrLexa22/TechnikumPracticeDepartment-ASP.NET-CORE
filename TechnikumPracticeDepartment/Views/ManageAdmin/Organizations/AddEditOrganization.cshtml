@@ -1,0 +1,346 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationsPages
+@model AddEditOrganization
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.4">
+<link rel="stylesheet" type="text/css" href="~/css/warning.css">
+<link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jQuery-Mask-Plugin-master/dist/jquery.mask.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<style>
+    .information_div > div > div > div:not(:last-child) {
+        width: 400px!important;
+    }
+</style>
+<div class="main">
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog"></div>
+    </div>
+    <div class="left-menu-main">
+        <h2 id="date-day">17</h2>
+        <h2 id="date-mont">Сентябрь</h2>
+        <span id="date-year">2022</span>
+        <div class="left_men"></div>
+    </div>
+    <div class="right_menu">
+        <div class="main_block">
+            <div class="top_panel">
+                @if (Model.ID_Organization != 0)
+                {
+                    <p class="employees_title">@Model.NotFullNameOrganization</p>
+                }
+                else
+                {
+                    <p class="employees_title">Добавление организации</p>
+                }
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <form asp-controller="Organizations" asp-action="AddEditOrganizationPost" asp-route-id="@Model.ID_Organization" method="post" class="callback-from">
+                <div class="information_div" style="height: fit-content;">
+                    <div>
+                        <p>Полное наименование оранизации</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_Email">@Model.FullNameOrganization</p><p>
+                                <div class="inputs_Email inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <input type="text" asp-for="ID_Organization" value="@Model.ID_Organization" />
+                                        </div>
+                                        <input asp-for="FullNameOrganization" type="text" class="search-field" id="input_Email" style="width: 100%;" placeholder="Полное наименовнаие организации"></input>
+                                    </div>
+                                    <span asp-validation-for="FullNameOrganization" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Email" onclick="edit('Email', true);" href="#"><img id="img_edit_Email" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Email" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Сокращённое наименование организации</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_CodeBlock">@Model.NotFullNameOrganization</p>
+                                <div class="inputs_CodeBlock inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <input type="text" asp-for="ID_Organization" value="@Model.ID_Organization" />
+                                        </div>
+                                        <input asp-for="NotFullNameOrganization" type="text" class="search-field" id="input_CodeBlock" style="width: 100%;" placeholder="Сокращённое наименование организации"></input>
+                                    </div>
+                                    <span asp-validation-for="NotFullNameOrganization" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_CodeBlock" onclick="edit('CodeBlock', true);" href="#"><img id="img_edit_CodeBlock" src="~/images/edit.svg"><img style="display: none;" id="img_cross_CodeBlock" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Юр. адрес организации</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_Address">@Model.AddressOrganization</p>
+                                <div class="inputs_Address inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="AddressOrganization" type="text" class="search-field" id="input_Address" style="width: 100%;" placeholder="Адрес организации"></input>
+                                    </div>
+                                    <span asp-validation-for="AddressOrganization" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_Address" onclick="edit('Address', true);" href="#"><img id="img_edit_Address" src="~/images/edit.svg"><img style="display: none;" id="img_cross_Address" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>ИНН организации (необязательно)</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_INN">@Model.INNOrganization</p>
+                                <div class="inputs_INN inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                            <input type="text" asp-for="ID_Organization" value="@Model.ID_Organization" />
+                                        </div>
+                                        <input asp-for="INNOrganization" type="text" class="search-field" id="input_INN" style="width: 100%;" placeholder="ИНН организации"></input>
+                                    </div>
+                                    <span asp-validation-for="INNOrganization" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_INN" onclick="edit('INN', true);" href="#"><img id="img_edit_INN" src="~/images/edit.svg"><img style="display: none;" id="img_cross_INN" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Фамилия руководителя</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_SurnameOrganization">@Model.SurnameUser</p>
+                                <div class="inputs_SurnameOrganization inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="SurnameUser" type="text" class="search-field" id="input_SurnameOrganization" style="width: 100%;" placeholder="Фамилия руководителя организации"></input>
+                                    </div>
+                                    <span asp-validation-for="SurnameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_SurnameOrganization" onclick="edit('SurnameOrganization', true);" href="#"><img id="img_edit_SurnameOrganization" src="~/images/edit.svg"><img style="display: none;" id="img_cross_SurnameOrganization" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Имя руководителя</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_NameOrganization">@Model.NameUser</p>
+                                <div class="inputs_NameOrganization inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="NameUser" type="text" class="search-field" id="input_NameOrganization" style="width: 100%;" placeholder="Имя руководителя организации"></input>
+                                    </div>
+                                    <span asp-validation-for="NameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_NameOrganization" onclick="edit('NameOrganization', true);" href="#"><img id="img_edit_NameOrganization" src="~/images/edit.svg"><img style="display: none;" id="img_cross_NameOrganization" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Отчество руководителя (необязательно)</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_FtaherNameOrganization">@Model.PatronymicNameUser?.ToString()</p>
+                                <div class="inputs_FtaherNameOrganization inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="PatronymicNameUser" type="text" class="search-field" id="input_FtaherNameOrganization" style="width: 100%;" placeholder="Отчество руководителя организации"></input>
+                                    </div>
+                                    <span asp-validation-for="PatronymicNameUser" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_FtaherNameOrganization" onclick="edit('FtaherNameOrganization', true);" href="#"><img id="img_edit_FtaherNameOrganization" src="~/images/edit.svg"><img style="display: none;" id="img_cross_FtaherNameOrganization" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Номер телефона руководителя (необязательно)</p>
+                        <div>
+                            <div>
+                                <p @if(Model.ID_Organization == 0){<text>style="display: none;"</text>} id="old_PhoneNumber">@Model.PhoneNumber?.ToString()</p>
+                                <div class="inputs_PhoneNumber inputs_values" @if(Model.ID_Organization != 0){<text>style="display: none;"</text>}else{<text>style="display: grid;"</text>}>
+                                    <div class="input_dan search">
+                                        <input asp-for="PhoneNumber" type="text" class="search-field" id="input_PhoneNumber" style="width: 100%;" placeholder="Номер телефона руководителя организации"></input>
+                                    </div>
+                                    <span asp-validation-for="PhoneNumber" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div @if(Model.ID_Organization == 0){<text>style="display: none;"</text>}>
+                                <a id="editBTN_PhoneNumber" onclick="edit('PhoneNumber', true);" href="#"><img id="img_edit_PhoneNumber" src="~/images/edit.svg"><img style="display: none;" id="img_cross_PhoneNumber" src="~/images/cross.svg"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; margin-top: 10px;">
+                    <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white;" href="#" value="Сохранить" />
+                </div>
+            </form>
+            @if (Model.ID_Organization != 0)
+            {
+                @if(Model.IsAvaliable != false)
+                {
+                    <hr class="hr_style" size="1px" noshade>
+                    <div class="block_info">
+                        <p class="block_title">Аккаунты организации</p>
+                        <table class="table_roles" style="height: fit-content;">
+                            <tr>
+                                <th>
+                                    <p>Аккаунты</p>
+                                </th>
+                                <th>
+                                    <div>
+                                        <div class="btn_add edus" style="cursor: pointer; width: fit-content; margin-bottom: 15px;" onclick="addEditAccount('@Model.ID_Organization','0')">
+                                            <div class="btn_add_text" style="margin-bottom: 0;"><img src="~/images/plus.svg" style="width: 15px; height: 15px; vertical-align: middle;"></img> Добавить аккаунт</div>
+                                        </div>
+                                        @foreach (var a in Model.employeesOrganization)
+                                        {
+                                            <div style="display: flex;">
+                                                <div>
+                                                    <p style="margin-bottom: 25px;"><span style="font-weight: bold;">ФИО пользователя:</span> @a.User.SurnameUser @a.User.NameUser @a.User.PatronymicNameUser?.ToString()</p>
+                                                    <p><span style="font-weight: bold;">Email пользователя:</span> @a.User.Email</p>
+                                                </div>
+                                                <div style="margin-left: 15px;">
+                                                    <div onclick="addEditAccount('@Model.ID_Organization','@a.User.IdUser')" style="margin-right: 15px; cursor: pointer;" asp-action="AddEditAccountOrganization" asp-controller="Organizations" asp-route-idUser="@a.User.IdUser" asp-route-idOrganization="@Model.ID_Organization">
+                                                        <img style="max-width: 30px;" src="~/images/edit.png">
+                                                    </div>
+                                                    <div style="cursor: pointer;" onclick="deleeeteAccount('@Model.ID_Organization','@a.User.IdUser')">
+                                                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                     width="25px" height="25px" viewBox="0 0 94.926 94.926" style="enable-background:new 0 0 94.926 94.926;"
+                                                     xml:space="preserve">
+                                                        <g>
+                                                        <path d="M55.931,47.463L94.306,9.09c0.826-0.827,0.826-2.167,0-2.994L88.833,0.62C88.436,0.224,87.896,0,87.335,0
+		                                                    c-0.562,0-1.101,0.224-1.498,0.62L47.463,38.994L9.089,0.62c-0.795-0.795-2.202-0.794-2.995,0L0.622,6.096
+		                                                    c-0.827,0.827-0.827,2.167,0,2.994l38.374,38.373L0.622,85.836c-0.827,0.827-0.827,2.167,0,2.994l5.473,5.476
+		                                                    c0.397,0.396,0.936,0.62,1.498,0.62s1.1-0.224,1.497-0.62l38.374-38.374l38.374,38.374c0.397,0.396,0.937,0.62,1.498,0.62
+		                                                    s1.101-0.224,1.498-0.62l5.473-5.476c0.826-0.827,0.826-2.167,0-2.994L55.931,47.463z" />
+                                                                            </g>
+                                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if(Model.employeesOrganization == null || Model.employeesOrganization.Count() == 0)
+                                        {
+                                            <p>Нет аккаунтов</p>
+                                        }
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                }
+                <hr class="hr_style" size="1px" noshade>
+                <div class="block_info">
+                    <p class="block_title">Статус организации</p>
+                    <table class="table_roles" style="height: fit-content;">
+                        <tr>
+                            <th>
+                                <p>Статус</p>
+                            </th>
+                            <th>
+                                <div>
+                                    @if(Model.IsAvaliable == null)
+                                    {
+                                        <div><p style="color: green;">Действующая организация</p></div>
+                                        <div>
+                                            <a asp-action="RemoveOrganization" asp-controller="Organizations" asp-route-idOrganization="@Model.ID_Organization" class="submit_btn btn btn_save" style="background: #eda6bc;color: black!important;cursor: pointer;width: 180px;margin-bottom: 20px;margin-left:0;">
+                                                Удалить организацию
+                                            </a>
+                                        </div>
+                                    }
+                                    else if(Model.IsAvaliable == true)
+                                    {
+                                        <div><p style="color: green;">Действующая организация</p></div>
+                                        <div>
+                                            <a asp-action="RemoveOrganization" asp-controller="Organizations" asp-route-idOrganization="@Model.ID_Organization" class="submit_btn btn btn_save" style="background: #eda6bc;color: black!important;cursor: pointer;width: 180px;margin-bottom: 20px;margin-left:0;">
+                                                Удалить организацию
+                                            </a>
+                                        </div>
+                                    }
+                                    else if(Model.IsAvaliable == false)
+                                    {
+                                        <div><p style="color: red;">Организация удалена</p></div>
+                                        <div>
+                                            <a asp-action="RestoreOrganization" asp-controller="Organizations" asp-route-idOrganization="@Model.ID_Organization" class="submit_btn btn btn_save" style="background: #bff0bf;color: black!important;cursor: pointer;width: 180px;margin-bottom: 20px;margin-left:0;">
+                                                Восстановить организацию
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <hr class="hr_style" size="1px" noshade>
+                <div class="block_info">
+                    <p class="block_title">Вакансии организации</p>
+                    @if(Model.vacancy_list != null)
+                    {
+                        @if(Model.vacancy_list.Count() <= 0)
+                        {
+                            <p style="color: black; margin-left: 10px;">Нет вакансий</p>
+                        }
+                        else
+                        {
+                            <div style="margin-left: 10px;">
+                                @foreach(var a in Model.vacancy_list)
+                                {
+                                    <div style="margin-bottom: 8px; width: fit-content;"><a style="color: blue;" asp-action="LookVacancy" asp-controller="ManageVacancy" asp-route-id="@a.IdVacancy" target="_blank">@a.NameVacancy</a></div>
+                                }
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p style="color: black; margin-left: 10px;">Нет вакансий</p>
+                    }
+                </div>
+            }
+            <div>
+                <hr class="hr_style" size="1px" style="margin-top: 20px;" noshade>
+                <div style="display: flex; margin-top: 20px; margin-left: 10px;">
+                    <a class="btn" style="cursor: pointer;" asp-action="Index" asp-controller="Organizations">
+                        <p>Назад</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.left_men').load('@Url.Action("LeftMenu", "Additional")?index=4');
+    $("#input_PhoneNumber").mask('+7(999)999-99-99');
+    function addEditAccount(idOrganization, idUser) {
+        $.ajaxSetup({ cache: false });
+        $.get('/Organizations/AddEditAccountOrganization?idUser=' + idUser + '&idOrganization=' + idOrganization, function (data) {
+            $('#dialogContent').html(data);
+            $('#modDialog').show();
+        });
+    };
+    function deleeeteAccount(idOrganization, idUser) {
+        $.ajax({
+            type: "DELETE",
+            url: '@Url.Action("DeleteAccountOrganization", "Organizations")?idUser=' + idUser + '&idOrganization=' + idOrganization,
+            success: function () { location.reload(true); }
+        });
+    };
+</script>
+<script type="text/javascript" src="~/js/addEdit.js?version=0.2"></script>
+<script type="text/javascript" src="~/js/select.js"></script>
+
+
+

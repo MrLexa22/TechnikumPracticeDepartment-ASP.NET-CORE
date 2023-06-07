@@ -1,0 +1,334 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsOrganizationPages
+@model AddEditVacancy
+<link rel="stylesheet" type="text/css" href="~/css/admin/cadri.css?version=2">
+<link rel="stylesheet" type="text/css" href="~/css/select.css">
+<link rel="stylesheet" type="text/css" href="~/css/admin/addEdit.css?version=0.3">
+<script src="https://cdn.jsdelivr.net/gh/AmagiTech/JSLoader/amagiloader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<style>
+    .info_student > div > p {
+        margin-bottom: 10px;
+    }
+
+    .info_student > div > h3 {
+        margin-bottom: 15px;
+    }
+
+    .info_student > div > p > span {
+        font-weight: bold;
+    }
+
+    .info_student {
+        display: flex;
+    }
+
+    .info_student > div{
+        width: 50%;
+    }
+    
+    .info_block > p > span{
+        font-weight: bold;
+    }
+
+    .info_block > p {
+        margin-bottom: 10px;
+        word-wrap: break-word;
+    }
+
+    .info_block {
+        width: 70%;
+    }
+
+    .textarea_input{
+        width: 500px;
+        height: 200px;
+        padding: 10px;
+        font-family: 'Raleway', Calibri, Arial, sans-serif;
+        color: black;
+    }
+
+    .select2-container--default .select2-results > .select2-results__options {
+        color: black;
+    }
+
+    .pdf_block{
+        width: 90%; 
+        height: 678px;
+    }
+
+    .tag {
+        display: inline-block;
+        position: relative;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        padding: 0 11px;
+        text-align: left;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        background-color: #edeff0;
+        color: #303233;
+        height: 32px;
+        line-height: 30px;
+        border: 1px solid transparent;
+    }
+
+    @@media(max-width:550px){
+        .info_student{
+            display: block !important;
+        }
+
+        .info_block {
+            width: 90%;
+        }
+
+        .info_student > div {
+            width: 90%;
+        }
+
+        .textarea_input {
+            width: 90%;
+            height: 200px;
+            padding: 10px;
+            font-family: 'Raleway', Calibri, Arial, sans-serif;
+            color: black;
+        }
+
+        .input_dan {
+            width: 90% !important;
+        }
+
+        .tags_input{
+            width: 90% !important;
+        }
+
+        .select2-container{
+            width: 90% !important;
+        }
+
+        .pdf_block {
+            width: 90% !important;
+            height: 678px;
+        }
+    }
+</style>
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="left-menu-main">
+    <h2 id="date-day">17</h2>
+    <h2 id="date-mont">Сентябрь</h2>
+    <span id="date-year">2022</span>
+    <div class="left_men"></div>
+</div>
+<div class="right_menu">
+    <div class="top_panel">
+        <p class="employees_title">@Model.NameVacancy</p>
+    </div>
+    <hr class="hr_style" size="1px" noshade>
+    <div class="main_panel">
+        <div class="right_main_panel">
+            <div class="info_student">
+                <div>
+                    <h3 style="text-decoration: underline;">Данные организации:</h3>
+                    <p><span>Наименование организации:</span> @Model.organization.FullNameOrganization (@Model.organization.NotFullNameOrganization)</p>
+                    <p><span>ИНН организации:</span> @(Model.organization.InnOrganization == null ? "не указан" : Model.organization.InnOrganization)</p>
+                    <p><span>Адрес организации:</span> @Model.organization.AddressOrganization</p>
+                </div>
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <div class="info_block">
+                <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Описание вакансии:</h3>
+                <p>@Html.Raw(Model.Description.Replace(Environment.NewLine, "<br/>"))</p>
+            </div>
+            <hr class="hr_style" size="1px" noshade>
+            <div class="info_block">
+                <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Вакансия:</h3>
+                <p style="margin-top: 15px;"><span>Обязанности:</span></p>
+                <p>@Html.Raw(Model.Duties.Replace(Environment.NewLine, "<br/>"))</p>
+                <p style="margin-top: 15px;"><span>Требования:</span></p>
+                <p>@Html.Raw(Model.Requirements.Replace(Environment.NewLine, "<br/>"))</p>
+                <p style="margin-top: 15px;"><span>Условия:</span></p>
+                <p>@Html.Raw(Model.Conditions.Replace(Environment.NewLine, "<br/>"))</p>
+                <p style="margin-top: 15px;"><span>Дополнительная информация:</span></p>
+                <p>@Html.Raw(Model.AdditionalInformation.Replace(Environment.NewLine, "<br/>"))</p>
+                <p style="margin-top: 15px;"><span>Ключевые навыки:</span></p>
+                <div>
+                    @foreach (var a in Model.Tags)
+                    {
+                        <span class="tag">@a</span>
+                    }
+                </div>
+            </div>
+            @if (User.IsInRole("Студент") == false)
+            {
+                <hr class="hr_style" size="1px" noshade>
+                <div class="info_block">
+                    <div style="display: flex; margin-top: 10px; margin-bottom: 15px;">
+                        <div style="margin-top: 5px;"><a asp-action="Index" style="cursor: pointer; color: white; background-color:dimgrey; padding: 6px 20px; border: 1px solid rgb(132, 132, 132); border-radius: 5px;">Назад</a></div>
+                        <div style="margin-top: 5px;"><a asp-action="AddEditVacancy" asp-route-id="@Model.IdVacancy" style="margin-left:10px; cursor: pointer; color: white; background-color:#23364b; padding: 6px 20px; border: 1px solid rgb(132, 132, 132); border-radius: 5px;">Изменить</a></div>
+                    </div>
+                    <div style="margin-top: 30px; margin-bottom: 15px;"><a asp-action="RemoveVacancy" asp-controller="ManageVacancy" asp-route-id="@Model.IdVacancy" style="cursor: pointer; color: white; background-color:darkred; padding: 6px 20px; border: 1px solid rgb(132, 132, 132); border-radius: 5px;">Удалить</a></div>
+                </div>
+                @if (User.IsInRole("Работадатель") == true)
+                {
+                    <hr class="hr_style" size="1px" noshade>
+                    <div class="info_block" style="margin-bottom: 15px;">
+                        <h3 style="text-decoration: underline; margin-top: 10px; margin-bottom: 15px;">Отклики студентов:</h3>
+                        <div style="margin-bottom: 10px;">
+                            <h4>Фильтрация списка</h4>
+                            <div style="margin-top: 10px; margin-bottom: 5px;">
+                                <select class="select_option1" style="width: 300px;" onchange="change()" id="filterList">
+                                    <option value="1">Только отклики студентов</option>
+                                    <option value="2">Только отклики организации</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-top: 10px; margin-bottom: 5px;">
+                                <input onchange="change()" checked type="radio" id="all" name="contact" value="-1">
+                                <label for="all">Все</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="created" name="contact" value="0">
+                                <label for="created">Текущие (создан)</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="onrassmotr1" name="contact" value="1">
+                                <label for="onrassmotr1">На рассмотрении (ожидание ответа студента/организации)</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="onrassmotr2" name="contact" value="2">
+                                <label for="onrassmotr2">На рассмотрении (получен ответ студента/организации)</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="access_oy" name="contact" value="3">
+                                <label for="access_oy">Принят организацией/студентом (ожидание ответа ОУ)</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="access_full" name="contact" value="4">
+                                <label for="access_full">Принят</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="noaccess_organ" name="contact" value="5">
+                                <label for="noaccess_organ">Отказ (организации)</label>
+                            </div>
+
+                            <div style="margin-bottom: 5px;">
+                                <input onchange="change()" type="radio" id="noaccess_oy" name="contact" value="6">
+                                <label for="noaccess_oy">Отказ (ОУ)</label>
+                            </div>
+
+                            <div class="search" style="max-height: 35px; width: 50%;">
+                                <input oninput="change()" id="input_search" type="text" class="search-field" placeholder="Введите фамилию имя студента">
+                                <img src="~/images/search.svg" alt="" class="search-icon">
+                            </div>
+                        </div>
+                        <div id="listResponses"></div>
+                    </div>
+                }
+            }
+            else
+            {
+                <hr class="hr_style" size="1px" noshade>
+                @if (Model.responseStudent == 0)
+                {
+                    <div style="margin-top: 15px; width: fit-content;">
+                        <a asp-action="CreateResponse" asp-route-idVacancy="@Model.IdVacancy"><button class="btn btn_save" style="background-color: green; margin: 0; color: white; cursor: pointer;" type="button">Откликнуться</button></a>
+                    </div>
+                }
+                else if(Model.responseStudent == 1)
+                {
+                    <div style="margin-top: 15px;">
+                        <p style="color: red;">Вы не можете откликнуться на данную вакансию, так как Вы уже откликнулись на неё. <span onclick="infoResponse(@Model.responseId, @Model.responseStudent);" style="color: blue; cursor: pointer; width: fit-content;">Подробнее</span></p>
+                    </div>
+                }
+                else if (Model.responseStudent == 2)
+                {
+                    <div style="margin-top: 15px;">
+                        <p style="color: red;">Вы не можете откликнуться на данную вакансию, так как организация уже откликнулась на Ваше резюме. <span onclick="infoResponse(@Model.responseId, @Model.responseStudent);" style="color: blue; cursor: pointer; width: fit-content;">Подробнее</span></p>
+                    </div>
+                }
+                if (Model.responseStudent == 3)
+                {
+                    <div style="margin-top: 15px;">
+                        <p style="color: red;">Вы не можете откликаться на вакансии. Вы уже откликнулись на 5 вакансий.</p>
+                    </div>
+                }
+                if (Model.responseStudent == 4)
+                {
+                    <div style="margin-top: 15px;">
+                        <p style="color: red;">Вы не можете откликаться на вакансии. Вам необходимо заполнить резюме.</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script>
+    @if (User.IsInRole("Работадатель") == true)
+    {
+        <text>
+            $(document).ready(function () {
+                $('.select_option1').selectize();
+            });
+            $('.left_men').load('@Url.Action("LeftMenuOrganization", "Additional")?index=2');
+
+            let timer;
+
+            var url = '@Url.Action("GetListResponses", "ManageVacancy")?id=@Model.IdVacancy&filter=-1&filterList='+document.getElementById("filterList").value;
+            $('#listResponses').load(url);
+
+            function searchWithFilter() {
+                var filter = document.querySelector('input[name="contact"]:checked').value;
+                var url = '@Url.Action("GetListResponses", "ManageVacancy")?id=@Model.IdVacancy&filterList='+ document.getElementById("filterList").value +'&search=' + document.getElementById("input_search").value + '&filter=' + filter;
+                $('#listResponses').load(url);
+            }
+
+            function change() {
+                clearTimeout(timer);
+                timer = setTimeout(searchWithFilter, 1000);
+            }
+
+            function loadEnd(e) {
+                AmagiLoader.hide();
+            }
+            function loadStart(e) {
+                AmagiLoader.show();
+            }
+        </text>
+    }
+    else if (User.IsInRole("Студент") == true)
+    {
+        <text>
+            $('.left_men').load('@Url.Action("LeftMenuStudent", "Additional")?index=4');
+
+            function infoResponse(idResponse, typeResponse) {
+                $.ajaxSetup({ cache: false });
+            $.get('/StudentsResponses/InfoResponse?idResponse=' + idResponse + '&typeResponse=' + typeResponse + '&fromDelete=2', function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').show();
+                });
+            };
+        </text>
+    }
+    else if (User.IsInRole("Администратор") == true || User.IsInRole("Сотрудник производственного отдела") == true)
+    {
+        <text>
+            $('.left_men').load('@Url.Action("LeftMenuPractice", "Additional")?index=5');
+        </text>
+    }
+</script>

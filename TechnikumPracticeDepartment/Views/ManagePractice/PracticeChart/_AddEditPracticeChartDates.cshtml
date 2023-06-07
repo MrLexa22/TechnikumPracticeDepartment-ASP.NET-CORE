@@ -1,0 +1,94 @@
+﻿@using TechnikumPracticeDepartment.Models.ModelsPracticeChartPages
+@model AddEditPeriodPracticeChart
+<div class="modal-content">
+    <style>
+        .modal-windows {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            display: block;
+            z-index: 4;
+            padding: 70px 15px 15px;
+            overflow-y: auto;
+            backdrop-filter: blur(5px);
+            background-color: hsla(0, 0%, 100%, .9);
+            z-index: 2;
+        }
+        .obratnii-zvonok {
+            margin: 0 auto;
+            max-width: 380px;
+            position: relative;
+            width: 100%;
+            z-index: 4;
+        }
+        .labelForm{
+            color: rgb(103, 103, 103);
+            font-weight: bold;
+            width: 200px;
+            margin: 10px;
+            width: 85px;
+            display: inline-block;
+        }
+        .title{
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/checkbox.css">
+    <div class="modal-windows">
+        <div class="obratnii-zvonok">
+            <div class="form-edit fformms" style="padding: 30px; background-color: #fff; border-radius: 5px; box-shadow: 1px 1px 10px 0 rgb(0 0 0 / 12%); color: #696969; ">
+                <div class="title">@if (Model.ChartDates_ID == 0) { <text>Добавление</text>} else{<text>Изменение</text>} периода практики</div>
+                <form asp-action="AddEditDatePracticeChartPost" asp-controller="PracticeChart" asp-route-idChartDates="@Model.ChartDates_ID" asp-route-idPracticeChart="@Model.ChartPractice_ID" method="post" class="callback-from" enctype="multipart/form-data">
+                    <div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.dateStart">Дата начала:</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                    <input type="text" asp-for="ChartPractice_ID" value="@Model.ChartPractice_ID" />
+                                    <input type="text" asp-for="ChartDates_ID" value="@Model.ChartDates_ID" />
+                                </div>
+                                <input asp-for="dateStart" style="background-color: rgb(190, 190, 190);border: 1px solid rgb(152, 152, 152);padding: 4px;" type="date" style="width: 100%;"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.dateStart" style="color: red;"></span></div>
+                        </div>
+                        <div class="form-zap">
+                            <label class="labelForm" asp-for="@Model.dateEnd">Дата окончания</label>
+                            <div class="input_dan search" style="width: auto!important;">
+                                <div style="width: 0; height: 0; visibility: hidden; margin: 0;">
+                                    <input type="text" asp-for="ChartPractice_ID" value="@Model.ChartPractice_ID" />
+                                    <input type="text" asp-for="ChartDates_ID" value="@Model.ChartDates_ID" />
+                                </div>
+                                <input asp-for="dateEnd" style="background-color: rgb(190, 190, 190);border: 1px solid rgb(152, 152, 152);padding: 4px;" type="date" style="width: 100%;"></input>
+                            </div>
+                            <div style="padding-left: 110px;font-size: 11px;"><span asp-validation-for="@Model.dateEnd" style="color: red;"></span></div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="submit" class="submit_btn btn btn_save" style="cursor: pointer; color: white; margin: 0; margin-bottom: 15px;" href="#" value="Сохранить" />
+                    </div>
+                </form>
+                <div style="text-align: center;">
+                    <button class="submit_btn btn btn_save" style="background-color: #c4c4c4; margin: 0; color: Black; cursor: pointer;" onclick='$(".modal-content").remove();'>Отмена</button>
+                </div>
+            </div>
+        </div>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" defer></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" defer></script>
+        <script type="text/javascript">
+            //function RecoveryPassword(){
+            //    $("#recovrybtn").prop('disabled', true);
+            //    $.ajax({
+            //        type: "PUT",
+            //        url: 'Url.Action("RecoveryPassword", "Organizations")?idUser=Model.ID_User&idOrganization=Model.ID_Organization',
+            //        contentType: "application/json; charset=utf-8",
+            //        success: function () { alert('Пароль пользователя успешно сброшен'); }
+            //    });
+            //}
+        </script>
+    </div>
+</div>
